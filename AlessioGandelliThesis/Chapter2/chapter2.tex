@@ -4,6 +4,7 @@
 %*******************************************************************************
 
 \chapter{Related Work}%Or Literature Review
+\label{Ch:related}
 
 \ifpdf
     \graphicspath{{Chapter2/Figs/Raster/}{Chapter2/Figs/PDF/}{Chapter2/Figs/}}
@@ -11,15 +12,105 @@
     \graphicspath{{Chapter2/Figs/Vector/}{Chapter2/Figs/}}
 \fi
 
+In this Chapter we will see the literature about the main topics of this thesis, understanding why studying the climate is important, what is polarization and its connection with the climate debate and the state of the art of topic modeling.
 
 \section[Topics]{Topics}
+Topic modeling is a widely used technique to extract and analyze latent topics from a collection of documents. In this paper, we focus on topic modeling for short text, since we are handling tweets, which is challenging due to the limited amount of text available for each document. 
 
-\section[Networks]{Networks }
-\section[Polarizations]{Polarizations}
+In this chapter, we review traditional methods such as LDA and NMF, as well as more advanced techniques like BERTopic, top2Vec, BTM, and GSDMM. Finally, we'll touch on state-of-the-art methods that don't yet have real-world applications.
+
+\subsection{Traditional methods}
+LDA (Latent Dirichlet Allocation, 2003)\cite{blei_latent_2003} is a traditional probabilistic algorithm for topic modeling. It assumes that each document is a mixture of topics, and each topic is a distribution over words. However, LDA struggles with short texts due to the sparsity of the word co-occurrence matrix.
+
+Another classical algorithm based on linear algebra is NMF (Non-negative Matrix Factorization) \cite{lee_algorithms_2000}\cite{kuang_nonnegative_2015}. It assumes that each document is a linear combination of topics, and each topic is a non-negative linear combination of words. It can be used for short texts and could be used as a baseline method.
+
+\subsection{Advanced methods}
+Here we will see the most recent techniques that have been used and tested in different settings:
+
+BTM (Biterm Topic modeling, 2013) \cite{yan_biterm_2013} unlike the traditional methods it does not use the bag of words approach but it considers the co-occurrence of words to the topic modeling. It is a generative probabilistic model, similar to LDA, that represents each document as a set of couples of words (biterms).
+
+GSDMM (Gibbs Sampling algorithm for the Dirichlet Multinomial Mixture model, 2014) \cite{yin_dirichlet_2014} is a clustering-based algorithm that uses Gibbs sampling to iteratively assign each document to a topic. It models the distribution of words in each topic using a Dirichlet distribution. GSDMM is specifically designed for short text from social media, which is typically unstructured and contains slang.
+
+\subsection{Neural approach}
+
+The most advanced techniques (BERTopic \cite{grootendorst_bertopic_2022}and Top2Vec \cite{angelov_top2vec_2020})  exploit neural networks, in particular transformers \cite{vaswani_attention_2017}, and have a common structure: 
+
+\begin{enumerate}
+    \item Vectorization of the document using embeddings
+    \item Dimensionality reduction
+    \item Clustering
+    \item Topic definition
+\end{enumerate}
+
+
+
+\paragraph{Embeddings}
+
+The first and most important step is mapping the document into a vector of numbers in order to be easily manipulated by the machine. We can do this in a wide range of different ways: from naive one-hot encoding (RNN, LSSTM) to more complex transformers. Egger et al \cite{egger_topic_2022} proved that the latter is the best-performing method.
+
+Transformers exploit the concept of self-attention that is able to detect the most relevant part of the document. 
+
+Usually, transformers work at a word level, but now we are interested in a sentence level so we will use sentence transformers. There is also the possibility to use word level transformer and compute the mean pool of the input to get just a vector for each document.
+
+The goal is to map two documents about the same topic to two multidimensional points that are close according to some notion of distance, usually Euclidean or cosine similarity.
+
+BERTopic traditionally uses BERT transformer to calculate its embeddings but the flexibility of the framework allows the use of other embedding methods. The more known are Doc2Vec, Universal sentence encoder, and recently Openai released their own version of embedder \footnote{https://platform.openai.com/docs/guides/embeddings/what-are-embeddings}.
+
+\paragraph{Dimensionality reduction}
+After embedding the documents we have a set of long vectors. Since our goal is to cluster the documents, these algorithm works better with low dimensional data due to the well-known curse of dimensionality problem, so using an algorithm like UMAP \cite{McInnes2018}, t-SNE, or PCA we can reduce from some hundred dimension to, usually, less than 10. 
+
+\paragraph{Clustering}
+There are plenty of clustering algorithms: hierarchical, density-based, distribution-based, centroid based
+but the most used in this task is the density-based, thanks to its ability to detect outliers so the noise is not, in particular, HDBScan \cite{mcinnes_hdbscan_2017} which combines the hierarchical and the density-based.
+
+\paragraph{Topic Definition}
+After that every document has been assigned to a cluster we can search for the most relevant words to define that specific topic. Here we have the difference between Bertopic and Top2Vec,
+
+Bertopic use c-TF-IDF, which is a class-based version of the popular term frequency-inverse document frequency, so taking all the documents of a topic we use this algorithm to find the representative words.
+
+Top2Vec instead finds the n-closest word vectors to the centroid of the dense areas outputted from the clustering algorithm.
+
+
+\paragraph{Topic Representation}
+On top of this, we can do a further step, if we want to give a meaningful label to the topics instead of a bunch of words, we can use generative models like GPT to get the label.
+
+
+\subsection{Experimental methods}
+In this paragraph, we will provide an overview of the methods that have been presented in research but that do not have a working stable implementation.
+
+RIBS-TM (Regularized Informative Biterm Topic Model) \cite{lu_RIBS_2017}is a more advanced version of BTM that use A Recurrent Neural Network to learn the relationship between words, CRNTM(Context Reinforced Neural Topic Modeling over Short Texts) \cite{feng_context_2020}  uses a neural network approach that takes into account the contextual information of the text. TRNMF\cite{yi_topic_2020}  is a variant of NMF that includes regularization terms to encourage the topics to be sparse and interpretable.
+
+
+\section[Networks]{Networks}
+Social Network analysis allow us to study how actors interact with each others, a further step is using a multi layer network.
+
+\section[Polarization]{Polarization}
+There is not a clear and universally adopted definition of polarization, this work strictly follows the methodology used by Falkenberg in \cite{falkenberg_growing_2022} since the data used is very similar. We assume that we can detect the polarization using the retweet network.
+
 \paragraph{Latent ideology}
-\paragraph{Correspondence analysis }
-\paragraph{Hartigan diptest}
+In order to compute polarization on a retweet network we first estimate a latent ideology for each user, as defined in \cite{barbera_birds_2015} and adapted for retweets in \cite{flamino_shifting_2021}.
+Starting from the adjacency matrix of the retweet network A  using some linear algebra we can obtain a latent ideology score for each user.
+
+The first step is to identify n most retweeted users, we will call them influencers, then build an adjacency matrix between users and influencers (where \(a_{ij}\) is the number timed user i retweeted influencer j)
+
+\[P = lo faccio domani con matteo\]
 
 
+
+\begin{itemize}
+    \item normalize A by the number of retweets 
+    \item get the vector of row and column sums and consider the diagonal matrix 
+    \item compute the matrix of standardized residuals S
+    \item apply single value decomposition 
+    \item U is the users score 
+    \item rescale on [-1,1]
+
+\end{itemize}
+
+
+
+\paragraph{Hartigan's diptest}
+
+After computing all the users' latent ideology scores, to test the polarization we use Hartigan's diptest \cite{hartigan_dip_1985} which calculates the distance between the unimodal distribution 
 
 
