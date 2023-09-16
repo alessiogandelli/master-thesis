@@ -6,7 +6,7 @@
 In this chapter we will see an overview of the starting data used in this research, as well as some general statistics about it.
 
 \section{Where the data comes from}
-The data are tweets collected from the twitter api containing the hashtag \#cop2x with x = [1,2,6], so for each COP we have all the tweets containing the relative hashtag.
+The data are tweets collected from the twitter api containing the hashtag \#cop21 #cop26. 
 For each cop we have two jsonlines files, one for the tweets and one for the users involved. The fields are the one stated in the documentation \footnote{ \href{https://developer.twitter.com/en/docs/twitter-api/data-dictionary/object-model/tweet}{https://developer.twitter.com/en/docs/twitter-api/data-dictionary/object-model/tweet}}, there are many fields but the relevant ones are the following: 
 
 \begin{table}[H]
@@ -32,7 +32,41 @@ mentions\_id & The IDs of the mentioned users in the tweet \\ \hline
 While we use the user's file to map the id of the users to their username, even though not always we have this information, in that case we use the user id as username
 
 \section{Some statistics}
-We have data from 3 cops: COP21, COP22, COP26.
+We have data from 2 cops: COP21 , COP26.
+we call original tweet a tweet that has been written by an user, so that's not a retweet. Fig \ref{fig:tweets_by_date} show the tweets distribution over the time for both cops, most of the tweets have been tweet during while the conferences were taking place.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\linewidth ]{Chapter3/figures/tweets_by_date_cop21.png}
+
+    \includegraphics[width=0.75\linewidth ]{Chapter3/figures/tweets_by_date_cop26.png}
+    \caption{Numebr of tweets by date for cop 21 and cop26}
+    \label{fig:tweets_by_date}
+\end{figure}
+
+\paragraph{COP21}
+The date of the tweets spans from january 2015 to june 2016 but 77\% of the tweets are from november and december 2021, cop26 has been held between 30th novemebr and 12th december. In the dataset there are 975040 tweets that have been tweeted by 234389 users of which only tofix tweeted an original tweets with at least one retweet, every users tweeted on average 4.16 tweets, the maximum amount of tweet a user tweeted is 9635, 89\% of users tweeted less than 5 tweets.
+
+\paragraph{COP26}
+The date of the tweets spans from january 2021 to july 2022 but 81\% of the tweets are from October and November 2021, cop26 has been held between 31th october and 12th november. In the dataset there are 1558968 tweets that have been tweeted by 456000 users of which only 30195 tweeted an original tweets with at least one retweet, every users tweeted on average 3.42 tweets, the maximum amount of tweet a user tweeted is 14267, 90\% of users tweeted less than 2 tweets.
+\\
+
+
+Fig \ref{fig:tweets_by_users} shows how most of the users tweeted just few tweets (note that it is logarithmic) in the case of cop26 there \% of users tweeted less than 5 tweets, for cop21.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.75\linewidth ]{Chapter3/figures/tweets_by_users_cop21.png}
+
+    \includegraphics[width=0.75\linewidth ]{Chapter3/figures/tweets_by_users_cop26.png}
+    \caption{Numebr of tweets by user for cop 21 and cop26}
+    \label{fig:tweets_by_users}
+\end{figure}
+
+
+
+
+
 
 \begin{table}[h]
 \centering
@@ -48,11 +82,10 @@ We have data from 3 cops: COP21, COP22, COP26.
 \hline
  & {\textbf{n\_tweets}} & {\textbf{n\_retweets}} & {\textbf{n\_original}} & {\textbf{n\_original\_with\_retweets}} \\ \hline
 \textbf{COP21} & 975040 & 562946 & 412094 & 138427 \\ \hline
-\textbf{COP22} & 143278 & 20562 & 63855 & 20562 \\ \hline
 \textbf{COP26} & 1558968 & 1191813 & 367155 & 130138 \\ \hline
 \end{tabular}
-\caption{Dataset Statistics}
-\label{tab:my_label}
+\caption{Number of tweets}
+\label{tab:n_tweets}
 \end{table}
 
 
