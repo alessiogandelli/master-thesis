@@ -1,29 +1,35 @@
 \section[Networks]{Networks}
-Social Network Analysis (SNA): Social Network Analysis is a field that examines the relationships, interactions, and structures within a network of individuals or entities. It provides valuable insights into the dynamics, information flow, and influence within social networks. Several studies have applied SNA in different domains, such as online social networks \cite{borgatti_network_2009}, organizational networks, and public health networks. In this scenario we are using it to explore the topology of the interaction between users of twitter, we are studying the structure of their interaction  to see if there are some recurring patterns.
+Social Network Analysis (SNA): Social Network Analysis is a field that examines the relationships, interactions, and structures within a network of individuals or entities. It provides valuable insights into the dynamics, information flow, and influence within social networks. Several studies have applied SNA in different domains, such as online social networks \cite{borgatti_network_2009}, organizational networks, and public health networks. In this scenario, we are using it to explore the topology of the interaction between users of Twitter; we are studying the structure of their interaction to see if there are some recurring patterns.
 
-In paticular we will use Multi-layer networks \cite{kivela_multilayer_2014}:  complex networks that capture multiple types of relationships or interactions between nodes. They allow us to represent different dimensions or contexts in a single framework, providing a more comprehensive understanding of network dynamics. Thanks to the complexity added by the layers we can see how the same users interact in different dimensions, in our case, topics. This means that for each topic of discussion detected with the topic modeling part we have a network of interaction between the users. This allow us to study the presence of the users in multiple topics.
+In particular, we will use Multi-layer networks \cite{kivela_multilayer_2014}:  complex networks that capture multiple types of relationships or interactions between nodes. They allow us to represent different dimensions or contexts in a single framework, providing a more comprehensive understanding of network dynamics. Thanks to the complexity added by the multiple layers, we can see how the same users interact in different dimensions, in our case, topics. This implies that for each identified topic in the topic modeling phase, we can observe a network of interactions among users, allowing us to study the presence of the users on multiple topics.
+
+
 
 
 \section[Polarization]{Polarization}
-A meaningful metric that gained popularity among social scientist is polarization.
+As anticipated in chapter \ref{Introduction}, this work make sense only after understanding what Falkenberg did in his research \cite{falkenberg_growing_2022}. Since we are following the same methods, we also do the same assumption, such as the bipolarity of the polarization. In this section we will see how polarization will be computed.
 
-There is not a clear and universally adopted definition of polarization, bramson et al \cite{bramson_understanding_2017} tried to summarise different types: Spread, Dispersion, coverage, Regionaliationm Community fractioning, distinctness, group coverage, group consensous, size parity.
+A meaningful metric that gained popularity among social scientists is polarization. The researchers believe that polarization can be harmful to mantain the democratic stability \cite{mccoy_polarization_democracy_2018}. Thus understanding the phenomenon is important to develop a solution to irìt.
 
-It has been used to study the impact of political discussion on social media especially around US presidential elections \cite{conover_political_2011}
-\cite{flamino_shifting_2021} . Due to this we should be careful generalizing since the US politics is build around 2 main parties ( Democrats and Republicans) so a bimodal view of polarization is the best suited for this case, but not for all.  Despite this, an analysis in the polarization over 21 differnt country shows that US is not the only place where it has been detected  \cite{gidron_toward_2019}.
-
-Even though Falkenberg detected an increasing polarization only in the COP26, so in 2021, Williams et al \cite{williams_network_2015} found the presence of echo chambers around the climate discussion in social media, with a small presence of open forums. In this work we will try to connect these 2 researches trying to understand if breaking down the discussion in topics we can see if the polarization of certain topics have been always high. 
+It has been used to study the impact of political discussion on social media, especially around US presidential elections \cite{conover_political_2011}
+\cite{flamino_shifting_2021} . Due to this, we should be careful generalizing since US politics is built around two main parties ( Democrats and Republicans), so a bimodal view of polarization is the best suited for this case, but not for all. Despite this, an analysis of the polarization over 21 different countries shows that the US is not the only place where it has been detected  \cite{gidron_toward_2019}.
 
 
-This work strictly follows the methodology used by Falkenberg in \cite{falkenberg_growing_2022} since the data used is very similar, we use the Dispersion polarization  definition that look into the distribution of believes to detect peaks, Falkenberg demonstrated that the assumption of bimodality make sense deviding the population in climate supporter and climate sceptics. We also assume that we can detect the polarization using the retweet network.
+
+Even though Falkenberg detected an increasing polarization only in the COP26, in 2021, Williams et al. \cite{williams_network_2015} found the presence of echo chambers around the climate discussion in social media, with a small presence of open forums. In this work, we will try to connect these two pieces of research to understand if, breaking down the discussion into topics, we can see if the polarization of specific topics has always been high. 
+
+There is not a clear and universally adopted definition of polarization; Bramson et al. \cite{bramson_understanding_2017} tried to summarise it defining different types: Spread, Dispersion, coverage, Regionaliation, Community fractioning, distinctness, group coverage, group consensus, and size parity.
+
+
+ We use the Dispersion polarization definition that looks into the distribution of beliefs to detect peaks. Falkenberg demonstrated that the assumption of bimodality makes sense, dividing the population into climate supporters and climate skeptics. We also assume that we can detect the polarization using the retweet network.
 
 \paragraph{Latent ideology}
-In order to compute polarization on a retweet network we first estimate a latent ideology for each user, as defined in \cite{barbera_birds_2015} and adapted for retweets in \cite{flamino_shifting_2021}.
+In order to compute polarization on a retweet network, we first estimate a latent ideology for each user, as defined in \cite{barbera_birds_2015} and adapted for retweets in \cite{flamino_shifting_2021}.
 
 
-Starting from the adjacency matrix of the retweet network  using some linear algebra we can obtain a latent ideology score for each user.
+Starting from the adjacency matrix of the retweet network and after some linear algebra, we can obtain a latent ideology score for each user.
 
-The first step is, out of the $n$ users, to identify $m$ most retweeted users, we will call them influencers, then build an adjacency matrix $A\in \mathbb{R}^{n x m}$ between users and influencers (where \(a_{ij}\) is the number of times user i retweeted influencer j). Now let us see in details the precess from the matrix to the scores.
+The first step is, out of the $n$ users, to identify $m$ most retweeted users, we will call them influencers, then build an adjacency matrix $A\in \mathbb{R}^{n x m}$ between users and influencers (where \(a_{ij}\) is the number of times user $i$ retweeted influencer $j$). Now let us see in detail the process from the matrix to the scores. It this way we are excluding from the analysis all the users that did not interact with with the top n influencers.
 
 \\
 
@@ -64,7 +70,7 @@ Then, compute the matrix of standardized residuals $S$:
 S = R\left(P - (\textbf{r}\cdot \textbf{c}^T)\right)C
 \end{equation}
 
-Using Singular Value Decomposition (SVD), which  is a factorization technique in linear algebra we can decomposes the standardize matrix into three other matrices. It provides important geometrical and theoretical insights about linear transformations and is extensively used in various fields such as data science, engineering, and statistics \cite{golub1970singular}. Given  matrix $S$, its SVD is  written as:
+Using Singular Value Decomposition (SVD), which is a factorization technique in linear algebra, we can decompose the standardized matrix into three other matrices. It provides essential geometrical and theoretical insights about linear transformations and is extensively used in various fields such as data science, engineering, and statistics \cite{golub1970singular}. Given  matrix $S$, its SVD is  written as:
 
 \begin{equation}
 S = U\Sigma V^T
@@ -92,7 +98,7 @@ score = -1 + 2 \cdot \frac{{X} - \min(X)}{\max(X) - \min(X)}
 
 \paragraph{Hartigan's diptest}
 
-After computing all the users' latent ideology scores, to test the polarization we use Hartigan's diptest \cite{hartigan_dip_1985}.
+After computing all the users' latent ideology scores, to test the polarization, we use Hartigan's diptest \cite{hartigan_dip_1985}.
 
 Hartigan's Dip Test is a statistical test used to determine if a distribution is unimodal. The test works by comparing the empirical distribution function of the data, denoted as $F(x)$, to the unimodal distribution function that minimizes the maximum difference between $F(x)$ and itself, denoted as $G(x)$. The dip statistic $D$ is then defined as:
 
@@ -100,6 +106,6 @@ Hartigan's Dip Test is a statistical test used to determine if a distribution is
 D = \sup_x |F(x) - G(x)|
 \end{equation}
 
-where $\sup_x$ denotes the supremum (least upper bound) over all $x$. The unimodal distribution function $G(x)$ is chosen such that it minimizes this supremum. In other words, $G(x)$ is the "best" unimodal approximation to the empirical distribution function $F(x)$.
+Where $\sup_x$ denotes the supremum (least upper bound) overall $x$, the unimodal distribution function $G(x)$ is chosen such that it minimizes this supremum. In other words, $G(x)$ is the "best" unimodal approximation to the empirical distribution function $F(x)$.
 
-The null hypothesis of the Dip Test is that the data comes from a unimodal distribution. If the dip statistic $D$ is significantly large, we reject the null hypothesis and conclude that the data is not unimodal. The p-value of the test is computed by comparing the observed dip statistic to the distribution of the dip statistic under the null hypothesis. This distribution is typically approximated using Monte Carlo simulations.
+The null hypothesis of the Dip Test is that the data comes from an unimodal distribution. If the dip statistic $D$ is significantly large, we reject the null hypothesis and conclude that the data is not unimodal. The p-value of the test is computed by comparing the observed dip statistic to the distribution of the dip statistic under the null hypothesis. This distribution is typically approximated using Monte Carlo simulations.
