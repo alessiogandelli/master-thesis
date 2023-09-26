@@ -3,17 +3,16 @@
 
 In this section, we will dive into all the unexplored paths, starting from Falkenberg's work. In particular, we will do the same polarization analysis on a topic level; instead of computing it at a full network level, we created a retweet network for each topic so we can see which are the topics that are driving the polarization of cop. Furthermore, we also want to explore how the polarization of topics evolved over time.
 
-Thanks to the previous section now, we are familiar with the concept of topic modeling and how the main models perform. The goal is to create a multilayer network where a topic represents each layer. 
+Thanks to the previous section now, we are familiar with the concept of topic modeling and how the main models perform. The goal is to create a multilayer network where every layer represents a topic. 
 
 In order to do so, we developed a Python library that can be used as a toolbox starting from the tweets fresh out from the official API of Twitter. The design is modular and can achieve different goals.
-In fact, even if we are interested only in the retweet network of the users (nodes are users, ties are retweets), this framework can be used to: 
+In fact, even if we are interested only in the retweet network of the users (nodes are users, ties are retweets), this framework can be used to perform different tasks, but to the purpose of this study we can: 
 
 \begin{itemize}
-    \item Labeling tweets according to their topic
-    \item Create a temporal text network 
-    \item Create the retweet network (normal and multilayer version)
-    \item Create the reply network
-    \item Create the quote network
+    \item Cluster tweets according to their topic
+    \item Give a meaningful label to the clusters
+    \item Create the retweet network (global and multilayer version)
+
 
 \end{itemize}
 
@@ -33,21 +32,23 @@ Even though you can skip some steps and start with your own data, the natural an
 
 \subsection{Process input}
 
-The first step consists of the transformation of the JSON objects into tabular data to optimize the space and handle the data in an easier way with pandas. This is also helpful to save space; in the case of cop26, we pass from a 14GB JSON to a less than 2 GB CSV since most of the fields are not relevant to this study.
+The first step consists of the transformation of the JSON objects into tabular data to optimize the space and handle the data in an easier way with pandas. This is also helpful to save space; in the case of COP26, we pass from a 14GB JSON to a less than 2 GB CSV since most of the fields are not relevant to this study.
 
-In this process, all the tweets with attachments and not in English are discarded. The tweets are divided into multiple dataframes, one for original tweets, i.e., the ones that the author actively writes, and one for the retweets, quotes, and reply.
+In this process, all the tweets with attachments and not in English are discarded. The tweets are divided into multiple dataframes, one for original tweets, i.e., the ones that the author actively writes, and one for the retweets.
 
-At the end of this stage, a CSV and pkl file are saved in case somebody needs the tweets in tabular data. Also, for caching purposes, in fact, if you re-run the script and these files exist, they will be loaded.
+At the end of this stage, a CSV and pkl file are saved in case somebody needs the tweets in tabular data.  If you re-run the script and these files exist, they will be loaded instead of  running again processing.
 
 \subsection{Topic modeling}
 
-As we extensively discussed in chapter \ref{Ch:related} in this segment of the pipeline, the tweets can be labeled using Bertopic, with the possibility to choose the embedder; the one used in this research is \textit{all-MiniLM-L6-v2}.
+As we extensively discussed in chapter \ref{Ch:related} in this segment of the pipeline, the tweets can be labeled using Bertopic, with the possibility to choose the embedder; the one used in this research is \textit{all-MiniLM-L6-v2}, the one evaluated in the previous section.
 
-This step is the most computationally expensive; for this reason, to avoid redundancy, the topic modeling has been run only to original tweets. 
+This step is the most computationally expensive; for this reason, to avoid redundancy, the topic modeling has been run only using original tweets. 
 
-After this step, all the original tweets are labeled with a topic, and then the label has been propagated to all the retweets so that the entire dataset is now labeled with a topic.
+After this step, all the original tweets are labeled with a numeric topic, and then the label has been propagated to all the retweets so that the entire dataset is now labeled with a topic.
 
-At this point, it is possible to use the OpenAI API to give a meaningful label to the topics; before this, it was just the most relatively frequent words of the topic. Using the langchain library, we can structure a prompt to be used. This is the one I used: 
+At this point, it is possible to use the OpenAI API to give a meaningful label to the topics; before this, it was just the most relatively frequent words of the topic. Using the langchain library, we can structure a prompt to be used.  We gave to the model the words identified with TF-IDF and 3 representative tweets sampling a subset of the documents in each topic and calculating  based on the cosine similarity between TF-IDF representations.
+
+This is the one used: 
 \\
 
 \textit{    I want you to act as a tweet labeler, you are given representative words
@@ -59,64 +60,30 @@ first = "{tweet1}", second = "{tweet2}", third = "{tweet3}}
 
 Similarly to the previous stage, the labeled dataset is saved in the cache folder both in CSV and pkl. The model and the labels are saved, too.
 
-\subsection{Temporal text network}
-\textit{should I add this chapter?}
-
-This step creates a temporal text network according to Vega and Magnani \cite{vega_foundations_2018} 
-
-The input of this stage is the dataframe containing all the tweets just created, but due to its modularity, you can use your own.
-
-There are two kinds of nodes: users and tweets.
-
-There are 3 kinds of edges : 
-\begin{itemize}
-    \item \textbf{user-tweet}: if the user has tweeted the tweet
-    \item  \textbf{tweet-user}: if the tweet mention the user
-    \item \textbf{tweet-tweet:} if the tweet retweets the other
-\end{itemize}
 
 
-The method also returns two dictionaries that map tweet nodes to their text and edges to their timestamp; this information is also stored as attributes in the network.
-\begin{figure}
-    \centering
-    \includegraphics[width=0.75\linewidth]{Chapter4/figures/full_network.png}
-    \caption{This is a visualization of a temporal text network; the bigger nodes are the users, the smaller are the tweets, and the color is the topic}
-    \label{fig:tt_network}
-\end{figure}
-
-The graph is stored in GML format in the network folder.
-
-\subsection{Project the network}
-The temporal text network contains much information and can be used for many different projects, but sometimes, having a simpler data structure is more helpful.
-
-To simplify the analysis, we want to have only one set of nodes, the authors, and see how they are related: this process is known as projection. The network is directed, and the rules for connecting the users are the following:
-\begin{itemize}
-    \item if user a is retweeting a tweet of user b: $a \rightarrow  b $
-    \item if user c mentions d in a tweet: $ c \rightarrow d $
-\end{itemize}
-
-
-Generally, a tie between two users means that the first did an action towards the second; the action can be a retweet or a mention.
-
-This is achieved using a hybrid approach using both iteration and recursion: first, it iterates over all the users, and for each user iterates on all its tweets, then it recursively searches for the end of the retweet chain.
-
-All the ties take into account the topic of the tweets, so multiple networks are created at this point, one for each topic, all saved in GML format.
-
-
-\subsection{Retweet network}
-While the projection of the temporal text network creates an interaction network, including both retweets and mentions, it is also possible to create a pure retweet network bypassing the temporal text network.
-The network is directed, the nodes are the users, and the tie is the number of retweets. For each topic, a network is created.
+\subsection{Network}
+In this phase, after labeling the tweets, we will create a retweet network for each topic, putting all together in a multilayer network.
+%The network is directed, the nodes are the users, and the tie is the number of retweets. For each topic, a network is created.
 
 In the process of the creation of the network, there are retweeted tweets that do not have the original one, so we discard them.
 
-\subsection{Multilayer network}
+The last step is the creation of a multilayer network using the multinet library developed by Uppsala University.  Every layer is a retweet network of a specific topic. It has been built starting from the subset of tweets of a specific topic, the unique users are the nodes and if user A retweets user B there will be a tie $A \rightarrow B$. The network is directed and weighted with the number of retweet. Fig \ref{fig:multilayer} is a simple example of a network with 2 layers.
 
-The last step is the creation of a multilayer network using the multinet library developed by Uppsala University; at this point, all the different networks created in the previous step are merged into a multilayer network.
+The networks then has been filtered removing the outlier layer, labeled with -1.
+
+\paragraph{COP26 network}
+For cop 26 we detected 70 layers,  average number of user per layer is 8127, min is 15, max is 108829, what else?
+
+\paragraph{COP21 Network}
+like cop 26
+
+
 
 \begin{figure}
     \centering
     \includegraphics[width=0.75\linewidth]{Chapter4/figures/projected_topics_ml.png}
-    \caption{Example of multilayer retweet network \ref{fig:tt_network}}
+    \caption{Example of multilayer retweet network }
     \label{fig:multilayer}
 \end{figure}
 
@@ -124,23 +91,48 @@ The last step is the creation of a multilayer network using the multinet library
 
 
 \section{Polarization}
-At this point, for each layer, we can compute for each user a latent ideology score, and then, using Hartigan's diptest, we can assign to each topic a polarization value. More details on how this is computed are in the related work.
-In this process, there are some parameters we can adjust: the number of influencers, which are defined as the most retweeted users, and n, which represents the minimum number of retweets a user should have done to an influencer to be considered.
+At this point, for each layer, we can compute for each user a latent ideology score, and then, using Hartigan's diptest, we can assign to each topic a polarization value. More details on how this is computed are in the related works.
+In this process, there are some parameters we can adjust: the number of influencers, which are defined as the most retweeted users, and $n$, which represents the minimum number of retweets a user should have done to an influencer to be considered.
 
-The ideology score is not computed on all the users, but when selecting the influencers, we are delimiting the users to the ones that retweeted those influencers. 
+The ideology score is not computed on all the users, but when selecting the influencers, we are delimiting the users to the ones that retweeted at least n times those influencers. 
 
-Now we have for those users the ideology score for each of them.
+In order to have enought data to analyze we set $n\_influencers = 100$ and $n=2$ . The hartigan diptest requires a minimum of nodes to be statistically significant, at this point the layer are filtered, all the layers with a p-value of the diptest higher than  0.05 have been discarded. 
 
+\paragraph{COP26 }
+COP26 we pass from 70 to 30 networks
+The total influencers considered  in cop 26 in the analysis is 1698 and 22302 users have a score assigned for cop26, with an average of 1311 actors per topic, with a min of 151 and a max of 7764.  
+
+\paragraph{COP21 to fix}
+COP21we pass from 70 to 26 networks
+The total influencers considered  in cop 26 in the analysis is 1557 and 22161 users have a score assigned for cop26, with an average of 1311 actors per topic, with a min of 151 and a max of 7764.  
+
+Tab     \ref{tab:recap_ideology} presents a summary of the starting networks 
+
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|l|l|l|l|}
+        \hline
+        \textbf{Description} & \textbf{COP21} & \textbf{COP26} & \textbf{COP2x}\\ \hline
+        Initial topics & 36 & 70 & 1 \\ \hline
+        Final topics & 4 & 26 & 1\\ \hline
+        Influencers scored & 270 & 1557 & 1\\ \hline
+        Users scored & 7931 & 22161& 1 \\ \hline
+        Mean users/topic &  2058 & 1311 & 1\\ \hline
+        Min users/topic & 35 & 151 & 1\\ \hline
+        Max users/topic & 7524 & 7764 & 1\\ \hline
+        \end{tabular}
+        \caption{Summary of Latent ideology}
+    \label{tab:recap_ideology}
+\end{table}
 
 
 \section{Logitudinal analysis}
-In order to see topic polarization over time, we need to run the topic modeling with all the tweets. Still, there are too many, so instead of taking the original tweets of cop 21 and cop26, we only take the ones with retweets which are around 1/3 of the total but are the one needed to be propagated to the rest of the network.
+In order to see topic polarization over time, we need to run the topic modeling with all the tweets. Still, there are too many, so instead of taking the original tweets of cop 21 and cop26, we only take the original with at least one retweet which are around 1/3 of the total but are the one needed to create  the rest of the network.
 
-\paragraph{Getting top influencer}
-The top n influencers are simply the n influencers with the highest indegree in the retweet network, i.e., the most retweeted ones.
+Then the two dataset have been merged, we will refer to this dataset $COP2x$ and the same process described below has been done.
 
 
-After doing this process for all the cops, the dataframes are merged and saved.
 
-\paragraph{get topics}
-At this point, we can run the topic modeling on the original tweets and then propagate the results to the retweets. 
+
+ 

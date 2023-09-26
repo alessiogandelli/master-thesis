@@ -4,9 +4,10 @@
 %*******************************************************************************
 
 \chapter{Data Description}%
+\label{ch:data}
 In this chapter, we will see an overview of the starting data used in this research, as well as some general statistics about it.
 
-\section{Where the data comes from}
+\section{Source of the data}
 The data are tweets collected from the Twitter API containing the hashtag \#cop21 \#cop26. 
 For each cop, we have two jsonlines files, one for the tweets and one for the users involved. The fields are the ones stated in the documentation \footnote{ \href{https://developer.twitter.com/en/docs/twitter-api/data-dictionary/object-model/tweet}{https://developer.twitter.com/en/docs/twitter-api/data-dictionary/object-model/tweet}}, there are many but the relevant ones to us are the following: 
 
@@ -32,7 +33,7 @@ mentions\_id & The IDs of the mentioned users in the tweet \\ \hline
 \end{table}
 While we use the user's file to map the ID of the users to their username, even though we do not always have this information, in that case, we use the user ID as the username.
 
-\section{Some statistics}
+\section{ Data Statistics}
 We have data from 2 cops: COP21, COP26.
 All the tweets are in English and without links or image/video content.
 We call an original tweet a tweet written by a user, so that's not a retweet. Fig \ref{fig:tweets_by_date} shows the distribution of the tweets over time for both cops; most of the tweets have been tweeted while the conferences were taking place.

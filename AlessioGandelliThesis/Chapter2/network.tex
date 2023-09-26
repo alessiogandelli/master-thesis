@@ -1,7 +1,26 @@
 \section[Networks]{Networks}
-Social Network Analysis (SNA): Social Network Analysis is a field that examines the relationships, interactions, and structures within a network of individuals or entities. It provides valuable insights into the dynamics, information flow, and influence within social networks. Several studies have applied SNA in different domains, such as online social networks \cite{borgatti_network_2009}, organizational networks, and public health networks. In this scenario, we are using it to explore the topology of the interaction between users of Twitter; we are studying the structure of their interaction to see if there are some recurring patterns.
 
-In particular, we will use Multi-layer networks \cite{kivela_multilayer_2014}:  complex networks that capture multiple types of relationships or interactions between nodes. They allow us to represent different dimensions or contexts in a single framework, providing a more comprehensive understanding of network dynamics. Thanks to the complexity added by the multiple layers, we can see how the same users interact in different dimensions, in our case, topics. This implies that for each identified topic in the topic modeling phase, we can observe a network of interactions among users, allowing us to study the presence of the users on multiple topics.
+A network,  often known as a graph, is a data structure composed of nodes and ties (connections between nodes). This enables us to model how the different nodes are linked to each other. The applications of this are countless, for example there are networks of computers, the webpages can be considered nodes and the links the ties. In logistic and trasportation you can use network to find the optimal route.
+
+If the nodes are persons and the tie some sort of interactions we have a social network, this will be the kind of network treated in this thesis.
+
+
+Social Network Analysis is a field that examines the relationships, interactions, and structures within a network of individuals or entities. It provides valuable insights into the dynamics, information flow, and influence within social networks. Several studies have applied SNA in different domains \cite{borgatti_network_2009}, such as online social networks , organizational networks, and public health networks. A growing field in this context is the analysis of social media, that completely changed how the reserch in this area is done, Thanks to the huge amount of data we can obtain, we can move to a data driven methodolody, where the data collection is not strictly embedded in the design of the experiment but it is the starting point on top of which we build the research. Another advantage of this kind of this data is that, coming from a natural observation of actors in a social enviroment is not as biased as data that has been self reported or collected in a laboratory setting, in particual Veltri \cite{digital_veltri_2019} explains how the behavioural data is linked to automatic decisions in the sorrounding enviroments, while self reported one is more consciuos and reflexive and not always the action matches with what people say. We must note that the data is not completely unbiased, it depends on the goal and the structure that the platform gave to it.
+
+In this scenario, we are using it to explore the topology of the interaction between users of Twitter; we are studying the structure of their interaction to see if there are some recurring patterns.
+
+\subsection{Multi-layer Networks}
+In particular, we will do this using a Multi-layer networks (MLN) framework\cite{kivela_multilayer_2014}. MLN are complex networks that capture multiple types of relationships or interactions between nodes. They allow us to represent different dimensions or contexts in a single framework, providing a more comprehensive understanding of network dynamics.
+Single-layer networks are, in certain cases, an over semplification of the reality\cite{trax_multilayer_16} \cite{hammoud_multilayer_2020}.
+
+MLN are often used in biological networks where the due to organism complexity every biological function is usually influenced by more factors and modeling with a MLN helps the researcher in studying the interaction between factors. Another biological use of MLN is epidemiology where the presence of a certain disease can be strongly influenced by other clinical conditions. For example Kinsley et al. \cite{kinsley_multilayer_2020} used this framework in veterinary epidemiology to identify the subjects that are more prone to spread the disease.
+
+Without leaving our field, social networks, in particular twitter,  several research used MLN to structure their study.  Ref \cite{nguyen_twitter_21} used it to identify the most central accounts over multiple layers in the discussion of different political candidates, one for each layers. Related to this De Domenico \cite{de_domenico_ranking_2015} described mathematically different ways to compute nodes centrality on multiples layers, introducing the concept of versatility. 
+
+
+
+
+Thanks to the complexity added by the multiple layers, we can see how the same users interact in different dimensions, in our case, topics. This implies that for each identified topic in the topic modeling phase, we can observe a network of interactions among users, allowing us to study the presence of the users on multiple topics.
 
 
 
@@ -12,13 +31,25 @@ As anticipated in chapter \ref{Introduction}, this work make sense only after un
 A meaningful metric that gained popularity among social scientists is polarization. The researchers believe that polarization can be harmful to mantain the democratic stability \cite{mccoy_polarization_democracy_2018}. Thus understanding the phenomenon is important to develop a solution to irìt.
 
 It has been used to study the impact of political discussion on social media, especially around US presidential elections \cite{conover_political_2011}
-\cite{flamino_shifting_2021} . Due to this, we should be careful generalizing since US politics is built around two main parties ( Democrats and Republicans), so a bimodal view of polarization is the best suited for this case, but not for all. Despite this, an analysis of the polarization over 21 different countries shows that the US is not the only place where it has been detected  \cite{gidron_toward_2019}.
-
-
+\cite{flamino_shifting_2021} . Due to this, we should be careful generalizing since US politics is built around two main parties ( Democrats and Republicans), so a bimodal view of polarization is the best suited for this case, but not for all. Despite this, an analysis of the polarization over 21 different countries shows that the US is not the only place where it has been detected  \cite{gidron_toward_2019}. Ref
+\cite{radicioni_networked_2021}
+show the polarization can have different geometries than the traditional bimodality.
 
 Even though Falkenberg detected an increasing polarization only in the COP26, in 2021, Williams et al. \cite{williams_network_2015} found the presence of echo chambers around the climate discussion in social media, with a small presence of open forums. In this work, we will try to connect these two pieces of research to understand if, breaking down the discussion into topics, we can see if the polarization of specific topics has always been high. 
 
-There is not a clear and universally adopted definition of polarization; Bramson et al. \cite{bramson_understanding_2017} tried to summarise it defining different types: Spread, Dispersion, coverage, Regionaliation, Community fractioning, distinctness, group coverage, group consensus, and size parity.
+There is not a clear and universally adopted definition of polarization; Bramson et al. \cite{bramson_understanding_2017} tried to summarise it defining different types, we assume that we have  a measure of 'opinion' for each user: 
+\begin{itemize}
+    \item \textbf{Spread}: defines as the breadth of opinion, the distance between the two extremes
+    \item \textbf{Dispersion} considers the shape of the distribution of the opinions and search for peaks
+    \item \textbf{Coverage} do not look at the shape but at the similarity of opinions within the groups
+    \item \textbf{Regionalization}, looks at the spectrum not covered between the groups
+    \item \textbf{Community fractioning} is " the degree to which the population can be broken into subpopulations
+    \item \textbf{Distinctness} defined as  "the degree to which the group distribution can be separated"
+    \item \textbf{Group divergence} The opposite of distinctness, how different are the groups
+    \item  \textbf{Group consensus} How people in the same group have similar opinions
+    \item  \textbf{Size parity } put relevance on the size of each group
+\end{itemize}
+
 
 
  We use the Dispersion polarization definition that looks into the distribution of beliefs to detect peaks. Falkenberg demonstrated that the assumption of bimodality makes sense, dividing the population into climate supporters and climate skeptics. We also assume that we can detect the polarization using the retweet network.
@@ -29,7 +60,7 @@ In order to compute polarization on a retweet network, we first estimate a laten
 
 Starting from the adjacency matrix of the retweet network and after some linear algebra, we can obtain a latent ideology score for each user.
 
-The first step is, out of the $n$ users, to identify $m$ most retweeted users, we will call them influencers, then build an adjacency matrix $A\in \mathbb{R}^{n x m}$ between users and influencers (where \(a_{ij}\) is the number of times user $i$ retweeted influencer $j$). Now let us see in detail the process from the matrix to the scores. It this way we are excluding from the analysis all the users that did not interact with with the top n influencers.
+The first step is, out of the $n$ users, to identify $m$ most retweeted users, we will call them \textit{influencers}, then build an adjacency matrix $A\in \mathbb{R}^{n x m}$ between users and influencers (where \(a_{ij}\) is the number of times user $i$ retweeted influencer $j$). Now let us see in detail the process from the matrix to the scores. It this way we are excluding from the analysis all the users that did not interact with with the top n influencers.
 
 \\
 

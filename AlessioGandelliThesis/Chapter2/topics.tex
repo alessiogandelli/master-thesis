@@ -1,5 +1,5 @@
 \section[Topics]{Topics}
-Topic modeling is a widely used technique to extract and analyze latent topics from a collection of documents. In this paper, we focus on topic modeling for short text since we are handling tweets, which is challenging due to the limited amount of text available for each document. 
+Topic modeling is a widely used technique to extract and analyze latent topics from a collection of documents. In this paper dealing with tweets, the focus will be on topic modeling for short text; the challenge rests, therefore, on the limited amount of text available for each document. 
 
 In this chapter, we review traditional methods such as LDA and NMF and more advanced techniques like BERTopic, top2Vec, BTM, and GSDMM. 
 
@@ -9,9 +9,9 @@ LDA (Latent Dirichlet Allocation, 2003)\cite{blei_latent_2003} is a traditional 
 Another classical algorithm based on linear algebra is NMF (Non-negative Matrix Factorization) \cite{lee_algorithms_2000}\cite{kuang_nonnegative_2015}. It assumes that each document is a linear combination of topics, and each topic is a non-negative linear combination of words. It can be used for short texts and as a baseline method.
 
 \subsection{Advanced methods}
-Here, we will see the most recent techniques that have been used and tested in different settings:
+Here, the most recent techniques that have been used and tested in different settings will be inspected:
 
-BTM (Biterm Topic modeling, 2013) \cite{yan_biterm_2013} unlike the traditional methods, it does not use the bag of words approach, but it considers the co-occurrence of words to the topic modeling. A generative probabilistic model, similar to LDA, represents each document as a set of couples of words (biterms).
+BTM (Biterm Topic modeling, 2013) \cite{yan_biterm_2013}, unlike the traditional methods, does not use the bag of words approach, but it considers the co-occurrence of words to the topic modeling. As s generative probabilistic model, similar to LDA, represents each document as a set of pairs of words (biterms).
 
 GSDMM (Gibbs Sampling algorithm for the Dirichlet Multinomial Mixture model, 2014) \cite{yin_dirichlet_2014} is a clustering-based algorithm that uses Gibbs sampling to iteratively assign each document to a topic. It models the distribution of words in each topic using a Dirichlet distribution. GSDMM is designed explicitly for short text from social media, which is typically unstructured and contains slang.
 
@@ -30,42 +30,42 @@ Let us see in detail all these steps:
 
 \subsubsection{Embeddings}
 
-The first and most crucial step is mapping each document into a vector of numbers in order to be easily manipulated by the machine. We can do this in a wide range of different ways: from naive one-hot encoding (Recurrent Neural Networks (RNN), Long Short-Term Memory Networks) to more complex transformers. Egger et al. \cite{egger_topic_2022} proved that the latter is the best-performing method.
+The first and most crucial step is mapping each document into a vector of numbers  easily manipulated by the machine. This can be accomplished in a wide range of  ways: from naive one-hot encoding (Recurrent Neural Networks (RNN), Long Short-Term Memory Networks), to more complex transformers. Egger et al. \cite{egger_topic_2022} proved that the latter, in particular Bertopic is the best-performing method.
 
 A transformer \cite{vaswani_attention_2017}  is a deep learning architecture that excels at processing sequential data, such as natural language text. Unlike previous architectures like recurrent neural networks (RNNs) and long short-term memory (LSTM) models, transformers can process all parts of the input data in parallel, which allows for faster training and execution.
 
-The self-attention mechanism works by assigning different weights to different parts of the input. For each token in a sequence, it calculates a score (the attention score) that determines how much focus to place on other tokens when encoding that token. The higher the score, the more focus the model places on the token. An interesting feature of the transformer is the ability to map the same word from different contexts into two different points in a multidimensional space. Different words with the same meaning will be mapped in two close points.
+The self-attention mechanism works by assigning different weights to different parts of the input. For each token in a sequence, it calculates a score (the attention score) that determines how much to focus on other tokens when encoding that one. The higher the score, the more attention the model places on the token. An interesting feature of the transformer is the ability to map the same word from different contexts into two different points in a multidimensional space. Different words with the same meaning will be mapped in two close points.
 
-Usually, transformers work at a word level. However, now we are interested in a sentence level, so we will use sentence transformers, which map every document, instead of every word, to a vector.
+Usually, transformers work at a word level. However, in the case at hand, the focus is on a sentence level, so  sentence transformers will be used, since they map every document, instead of every word, to a vector.
 
 The goal is to map two documents about the same topic to two multidimensional points that are close according to some notion of distance, usually Euclidean or cosine similarity.
 
-BERTopic traditionally uses a BERT transformer to calculate its embeddings, but the flexibility of the framework allows the use of other embedding methods. The more known are Doc2Vec, Universal Sentence Encoder, and recently Openai released their version of embedder \footnote{https://platform.openai.com/docs/guides/embeddings/what-are-embeddings}.
+BERTopic traditionally uses a BERT transformer to calculate its embeddings, but the flexibility of the framework allows the use of other embedding methods. The best known are Doc2Vec, Universal Sentence Encoder, and the recent Openai release of their version of embedder \footnote{https://platform.openai.com/docs/guides/embeddings/what-are-embeddings}.
 
 \subsubsection{Dimensionality reduction}
 Dimensionality reduction is the process of reducing the number of input variables or features while retaining the essential information and preserving the underlying structure of the data.
-After embedding the documents, we have a set of long vectors; for instance using the \textit{all-MiniLM-L6-v2} model, you get a 384 vector long for each document.
-Since our goal is to cluster the documents, this algorithm works better with low dimensional data due to the well-known curse of dimensionality problem \cite{steinbach_dimensionality_2004}. 
-For this purpose, there exist many algorithms that can reduce the length of the vectors. Usually, for clustering,  less than ten dimensions are suggested.
+After embedding the documents, we have a set of long vectors; for instance, by using the \textit{all-MiniLM-L6-v2} model, the result is a 384 vector long for each document.
+Since the goal is to cluster the documents, this algorithm works better with low dimensional data due to the well known curse of dimensionality problem \cite{steinbach_dimensionality_2004}. 
+For this purpose,  many algorithms  that can reduce the length of the vectors exist. Usually, for clustering,  less than ten dimensions are suggested.
 Some examples are:
 Principal Component Analysis \cite{mackiewicz_principal_1993}(PCA), which works maximizing the variance of the data along the principal components, 
-t-SNE \cite{JMLR:v9:vandermaaten08a}focuses on preserving the local structure of the data in the lower-dimensional space. However, t-SNE is not recommended for clustering or outlier detection as it does not necessarily preserve distances or densities well, 
-UMAP \cite{McInnes2018}, which is particularly known for its scalability, ability to preserve global structure, and computational efficiency compared to other dimensionality reduction methods. These features make UMAP  suited to reduce the dimensionality of big datasets like the one used in this research.
+t-SNE \cite{JMLR:v9:vandermaaten08a}focuses instead on preserving the local structure of the data in the lower-dimensional space. However, t-SNE is not recommended for clustering or outlier detection as it does not necessarily preserve distances or densities well, 
+UMAP \cite{McInnes2018}, which is particularly known for its scalability, ability to preserve global structure, and computational efficiency compared to other dimensionality reduction methods, is suited to reduce the dimensionality of big datasets like the one used in this research.
 
 \subsubsection{Clustering}
-Clustering is an unsupervised machine-learning technique that aims to group similar objects together based on their features. The goal of clustering is to partition the data points into subsets, called clusters, such that objects within the same cluster are related to each other in a certain way. There are plenty of clustering algorithms: hierarchical, density-based, distribution-based, centroid based.
+Clustering is an unsupervised machine-learning technique that aims at grouping similar objects together based on their features. The goal of clustering is to partition the data points into subsets, called clusters, such that objects within the same cluster are related to each other in a certain way. There are plenty of clustering algorithms: hierarchical, density-based, distribution-based, and centroid based.
 
 K-means clustering \cite{jin_k-means_2010} is an iterative algorithm that partitions a dataset into a predefined number of clusters based on the proximity of data points to cluster centroids.
 
 HDBSCAN  \cite{mcinnes_hdbscan_2017}(Hierarchical Density-Based Spatial Clustering of Applications with Noise) is a density-based clustering algorithm that extends the DBSCAN algorithm to handle noise and clusters of different densities. It can automatically determine the optimal number of clusters and allow outliers.
 
-These properties of HDBSCAN make it perfect for clustering tweets since they are noisy, and not all tweets should be put in a cluster.
+These properties of HDBSCAN make it perfect for clustering tweets, since they are noisy and not all  of them should be put in a cluster.
 
 \subsubsection{Topic Definition}
-At this point, we are able to give a numeric label to each document depending on the cluster; the next is to give each cluster a set of representative words.
- Here we have the difference between Bertopic and Top2Vec,
+At this point, it is possible to give a numeric label to each document depending on the cluster; the next step is to give each cluster a set of representative words.
+ Here are the differences between Bertopic and Top2Vec,
 
-Bertopic uses Term Frequency- Inverse Document Frequency (TF-IDF) \cite{rajaraman_data_2011}  statistic to find the most relevant word for each topic; let us see in detail how it works:
+Bertopic uses Term Frequency- Inverse Document Frequency (TF-IDF) \cite{rajaraman_data_2011}  statistic to find the most relevant word for each topic; more specifically, the terms stand for:
 
 \textbf{Term Frequency}: It's the ratio of the number of times a specific term appears in a document to the total number of terms in that document.
 
@@ -79,11 +79,13 @@ TF-IDF is the product of these 2.
 
 
 
-Top2Vec, instead of each cluster, first identifies the centroid, which is typically calculated as the mean value of every dimension of all the points in the cluster. Then, get the n closest words to the centroid.
+Top2Vec, instead of each cluster,  identifies the centroid first, typically calculated as the mean value of every dimension of all the points in the cluster. Then, it gets the n closest words to the centroid.
 
 
 \subsubsection{Topic Representation}
-After extracting the most meaningful words of each topic, it is useful to give a label, which is a small sentence that can distillate in the best way the content of the cluster. This is not an easy task, and it has traditionally been performed by humans,  consuming time and energy and not getting the best result possible since humans are biased by their opinions  \cite{misra_seeing_2016} \cite{haliburton_investigating_2023}. Using Large Language Models, in particular, GPT gives a new opportunity to perform this task with good accuracy quickly. We will see in the methods chapter how it performed in this scenario.
+After extracting the most meaningful words of each topic, it is useful to give a label, which is a small sentence that can identify in the best way the content of the cluster. This is not an easy task, which is why, traditionally, it has been performed by humans, which is time and energy consuming and not neither does it guarantee getting the best result possible since humans are biased by their opinions  \cite{misra_seeing_2016} \cite{haliburton_investigating_2023}. Using Large Language Models, in particular, GPT gives a new opportunity to perform this task quickly, and with good accuracy. The performance in this scenario will be shown in more depth in the methods chapter.
+
+
 
 
 \subsection{Topic Evaluation}
@@ -92,7 +94,7 @@ An important step was to evaluate the performance of these models, either by usi
 \paragraph{Metrics}
 
 The coherence and diversity metrics are  measures used in topic modeling to evaluate the quality of the learned topics. 
-Coherence is a measure of how often words co-occur, more than would be expected if they were independent. Diversity measure the difference between two topics in term of words used.
+\textit{Coherence} is a measure of how often words co-occur, 'often' meaning more than would be expected if they were independent. \textit{Diversity} measures the difference between two topics in term of words used.
 
 \begin{itemize}
     \item \textbf{NPMI (Normalized Pointwise Mutual Information)} The NPMI value lies between -1 and 1, where a higher value indicates a higher level of coherence, thus implying better topics. It is calculated as follows: 
@@ -103,13 +105,13 @@ Coherence is a measure of how often words co-occur, more than would be expected 
     
     Where $P(\text{{word1}}, \text{{word2}})$ is the probability of both words appearing in a sliding window, and $P(\text{{word1}})$ and $P(\text{{word2}})$ are the individual probabilities of each word appearing in a window.
     
-    PMI values are then normalized to ensure the measure is not overly influenced by the frequency of word pairs:
+    PMI values are then normalized to ensure that the measure is not overly influenced by the frequency of word pairs:
     
     \begin{equation} 
     \text{{NPMI}}(\text{{word1}}, \text{{word2}}) = \frac{\text{{PMI}} (\text{{word1}}, \text{{word2}})}{-\log(P(\text{{word1}}, \text{{word2}}))}
     \end{equation}
     
-    The NPMI coherence of a topic is the average of the NPMI values of all pairs of words in that topic. The NPMI value lies between -1 and +1, with a higher value indicating better topic coherence.
+    The NPMI coherence of a topic is the average of the NPMI values of all pairs of words in that topic. The NPMI value lies between -1 and +1, where a higher value indicates better topic coherence.
     
     
     \item \textbf{Umass coherence}: similar to npmi, 

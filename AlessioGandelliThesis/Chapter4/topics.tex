@@ -6,7 +6,7 @@ This section presents the evaluation of different models used for tweet labeling
 The evaluation aimed to find the best-performing model to label tweets accurately. 
 The models included traditional methods (LDA, GSDMM, and NMF) and neural models like  BERTopic. 
 
-The unsupervised evaluation evaluated traditional metrics used in this context, such as coherence and diversity scores. We will see with more details in \ref{sec:unsupervised} The unsupervised evaluation results showed that BERTopic performed better than traditional methods, especially when using all-MiniLM-L6-v2 (BERT) \footnote{\href{https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2}{huggingface.co/sentence-transformers/all-MiniLM-L6-v2}}
+The unsupervised evaluation (\ref{sec:unsupervised} ) evaluated traditional metrics used in this context, such as coherence and diversity scores.  The  results showed that BERTopic performed better than traditional methods, especially when using all-MiniLM-L6-v2 (BERT) \footnote{\href{https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2}{huggingface.co/sentence-transformers/all-MiniLM-L6-v2}}
 , text-embedding-ada-002 (OpenAI) \footnote{\href{https://platform.openai.com/docs/models/embeddings}{platform.openai.com/docs/models/embeddings}}
 
 and tweet\_classification \footnote{\href{https://huggingface.co/louisbetsch/tweetclassification-bf-model}{huggingface.co/louisbetsch/tweetclassification-bf-model}} embeddings. 
@@ -27,7 +27,7 @@ To compare the different models, we used a library suggested by the creator of B
 
 
 \paragraph{Dataset}
-In this case, the dataset is composed of 1669 preprocessed tweets related to climate change with the hashtag \textit{\#cop22}; the preprocessing phase involved removing retweets, links, punctuation, and the most common hashtags (\#cop22, \#climatechange \#p2), all the tweets were in English.
+In this case, the dataset is composed of 1669 preprocessed tweets related to climate change with the hashtag \textit{\#cop22}; the preprocessing phase involved removing retweets, links, punctuation, and the most common hashtags (\#cop22, \#climatechange \#p2), all the tweets were in English.  We choose this dataset, which is not the one used in the final analysis because the domain is the same, and the goal analogous, since we have to detect subtopics of a main topic which is climate change. For this reason we can generalize the result to the tweets of the other cops.
 
 \paragraph{Methods}
 
@@ -45,7 +45,7 @@ Each unique combination of parameters has been fit three different times; then, 
 \paragraph{Results}
 The results show that BERtopic performs way better in these tests than the traditional methods. In comparison, the best Bertopic embeddings are mini, OpenAi, and tweet classification.
 
-The experiment demonstrates how the \textit{min\_topic\_size} value of 5 is too small, so that the results will be with a value of 15.
+The experiment demonstrates how the \textit{min\_topic\_size} value of 5 is too small, so that the results will be taken considering a value of 15.
 
 Fig \ref{figure:unsupervised_results} shows the value of all the metrics with a different number of topics for the traditional methods and the best-performing neural one (OpenAI)
 
@@ -58,7 +58,7 @@ Fig \ref{figure:unsupervised_results} shows the value of all the metrics with a 
 \end{figure}
 
 
-However, Hoyle et al. \cite{hoyle_is_2021} showed how these metrics are not very meaningful for evaluating these models, and we should take these results with a grain of salt.
+However, Hoyle et al. \cite{hoyle_is_2021} showed how these metrics are not very meaningful for evaluating these models due to the lack of validation for neural models, and we should take these results with a grain of salt.
 
 From this evaluation, we can conclude that BERTopic's topic size is better than smaller, especially if we have many documents. Topics of Bertopic are way more diverse than LDA and NMF, and within the topics, the most relevant words are more semantically related.
 
@@ -98,18 +98,19 @@ The first is simpler and contains very different topics, so it should be easy to
 
 For both datasets, we used two different versions: with and without hashtags. The reason for this is to avoid the model to cluster based on the hashtags.
 
-The tweets have been extracted using \href{https://twarc-project.readthedocs.io/en/latest/twarc2_en_us/}{twarc2}, getting only English tweets and without retweets.
+The tweets have been extracted using \href{https://twarc-project.readthedocs.io/en/latest/twarc2_en_us/}{twarc2}, getting only English tweets and without retweets. We used the trending topic at that time (March 2023)  because twitter API did not let you access data before 48h, so we decided to stream the most popular hashtags.
 
 \paragraph{Metrics}
-In order to evaluate the topics, we had to define some metrics. Using BERTopic, we do not set a number of topics apriori, so it has to figure it out by itself. After running the model, we have both the known topic (the hashtag) and the inferred one (a number), and we can now create a confusion matrix between the two sets. To map the inferred topic to the known one, we use the inferred topic with the highest value. This is not always true, but by combining this value with other metrics, we can detect the error.
+In order to evaluate the topics, we had to define some  accuracy metrics which is not a straightforward task, because using BERTopic, we do not set a number of topics apriori, so it has to figure it out by itself. 
+After running the model, we have both the known topic (the hashtag) and the inferred one (a number), and we can now create a confusion matrix between the two sets. 
+To map the inferred topic to the known one, we use the inferred topic with the highest value. This is not always true, but by combining this value with other metrics, we can detect the error.
 
 The metrics defined are the following:
 
 \begin{itemize}
-    \item \textbf{Accuracy}: first 
-    for each known topic, look at the biggest of inferred topics and divide by the number of tweets in that topic.
-    \item \textbf{accuracy no outliers}: in the Bertopic case, the label -1 refers to outliers. Compute the same as accuracy but not counting the outliers
-    \item \textbf{Min\_topic\_share}: same as accuracy but in the opposite direction, after having computed it for all of my\_topics, we take the minimum. This is helpful to detect when the accuracy is considered the wrong topic. This could happen when the inferred topic is less than the actual topic, so one inferred topic contains tweets from multiple topics, and then this number is low.
+    \item \textbf{Accuracy}:  for each known topic, look at the biggest inferred topic of the same row of the confusion matrix and divide by the number of tweets in that topic, you can use fig \ref{figure:supervised heatmap1} as a reference.
+    \item \textbf{Accuracy no outliers}: in the Bertopic case, the label -1 refers to outliers. Compute the same as accuracy but not counting the outliers
+    \item \textbf{Min\_topic\_share}: same as accuracy but in the opposite direction, after having computed it for all of inferred topics, we take the minimum. This is helpful to detect when the accuracy is considered the wrong topic. This could happen when the inferred topic is less than the actual topic, so one inferred topic contains tweets from multiple topics, and then this number is low.
 \end{itemize}
 
 
@@ -117,9 +118,13 @@ The metrics defined are the following:
 
 $max\_df$ is used to remove the terms that appear too frequently; a value of 0.95 means remove the terms that appeared in more than 95/% of documents 
 $min\_df$ is the opposite; in this case, being an integer, it refers to the minimum number of documents a term should be in to be considered 
-$ngram\_range$ defines the number of consecutive words to be considered; for example, a value of (1,2) tells the method to consider single words and bigrams ( two consecutive words)
-
 $alpha$ is a parameter that influences the number of clusters that will be created; low alpha results in many clusters with single words, while high alphas results in fewer clusters with more words.
+for these 3 we used the default settings.
+
+
+$ngram\_range$ defines the number of consecutive words to be considered; for example, a value of (1,2) tells the method to consider single words and bigrams ( two consecutive words), including threegrams was too computationally expensive
+
+we decide to use a $min\_topic\_size$ of 50 because we took around 200 tweet for each hashtag, and considering that some of that will be classified as outliers, 50 was a safe trade-off to not risk that a topic is too small and the size, that from unsupervised we colcuded that bigger is better.
 \begin{verbatim}
 BERTopic: (nr_topics = 'auto', min_topic_size = 50)
 
@@ -162,7 +167,7 @@ Fig \ref{figure:supervised heatmap1} shows how BERT and OpenAI performed in the 
     \label{figure:supervised heatmap1} % assign a unique label to each figure
 \end{figure}
 
-An interesting feature of Bertopic is the ability to visualize the different topics in 2-dimensional space; Fig \ref{fig:openai docs} shows the document distribution of OpenAi after projecting the embeddings in a two-dimensional space.
+An interesting feature of Bertopic is the ability to visualize the different topics in 2-dimensional space; Fig \ref{fig:openai docs} shows the document distribution of OpenAi after reducing the dimensionality of the embeddings .
 
 \begin{figure}
     \centering
@@ -176,7 +181,7 @@ An interesting feature of Bertopic is the ability to visualize the different top
 
 The politics dataset is clearly more difficult to evaluate, but with the hashtags, it is still doing a good job. Fig \ref{fig:openai_heat_docs_politics_hash} \ref{fig:bert politics with hashtags} shows heatmap and topic distribution for the politics dataset with hashtags.
 
- Both BERT and OpenAi are creating two topics from the Taiwan case. OpenAi merges two topics, which makes sense since the two hashtags related to Trump are related to the same event( \#trump and \#trump\_stormy) 
+ Both BERT and OpenAi are creating two topics from the Taiwan case. OpenAi merges two topics, which makes sense since the two hashtags related to Trump are related to the same event( \#IndictArrestAndConvictTrump and \#stormydaniels) 
 
 \begin{figure}
     \centering
