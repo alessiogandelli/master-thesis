@@ -1,25 +1,25 @@
 
 \section{Multilayer Network}
 
-In this section, we will dive into all the unexplored paths, starting from Falkenberg's work. In particular, we will do the same polarization analysis on a topic level; instead of computing it at a full network level, we created a retweet network for each topic so we can see which are the topics that are driving the polarization of cop. Furthermore, we also want to explore how the polarization of topics evolved over time.
+In this section, the analysis will dive into all the unexplored paths, starting from Falkenberg’s work. In particular, the same polarization analysis will be conducted on a topic level: instead of computing it at a full network level, a retweet network was created for each topic, so the topics that were driving the polarization of cop emerged. Furthermore, the aim was also  to explore how the polarization of topics evolved over time.
 
-Thanks to the previous section now, we are familiar with the concept of topic modeling and how the main models perform. The goal is to create a multilayer network where every layer represents a topic. 
+By reading the previous section, the concept of topic modeling is known, and so is the way the main models perform. The goal is to create a multilayer network where every layer represents a topic.
 
-In order to do so, we developed a Python library that can be used as a toolbox starting from the tweets fresh out from the official API of Twitter. The design is modular and can achieve different goals.
-In fact, even if we are interested only in the retweet network of the users (nodes are users, ties are retweets), this framework can be used to perform different tasks, but to the purpose of this study we can: 
+In order to do so, a Python library was developed, which can be used as a toolbox, starting from the tweets fresh out from the official API of Twitter. The design is modular and can achieve different goals. In fact, even if the  interest is only in the retweet network of the users (nodes are users, ties are retweets), this framework can be used to perform different tasks, but to the purpose of this study the tasks highlighted are: 
 
 \begin{itemize}
-    \item Cluster tweets according to their topic
-    \item Give a meaningful label to the clusters
-    \item Create the retweet network (global and multilayer version)
+    \item Clustering tweets according to their topic
+    \item Giving a meaningful label to the clusters
+    \item Creating the retweet network (global and multilayer version)
 
 
 \end{itemize}
 
-The steps are independent, so, for example, you can also create the network without the need to run the topic modeling part.
+The steps are independent, so, for example, it is possible to create the network without the need to run the topic modeling part.
+
 
 \paragraph{Steps}
-Even though you can skip some steps and start with your own data, the natural and minimal pipeline follows these steps:
+Even though some steps are avoidable, the natural and minimal pipeline follows these steps:
 
 
 \begin{enumerate}
@@ -32,21 +32,24 @@ Even though you can skip some steps and start with your own data, the natural an
 
 \subsection{Process input}
 
-The first step consists of the transformation of the JSON objects into tabular data to optimize the space and handle the data in an easier way with pandas. This is also helpful to save space; in the case of COP26, we pass from a 14GB JSON to a less than 2 GB CSV since most of the fields are not relevant to this study.
+The first step consists of the transformation of the JSON objects into tabular data to optimize the space and handle the data in an easier way with pandas. This is also helpful to save space; in the case of COP26, a shift is made from a 14 GB JSON to a less than 2 GB CSV, since most of the fields are not relevant to this study.
 
-In this process, all the tweets with attachments and not in English are discarded. The tweets are divided into multiple dataframes, one for original tweets, i.e., the ones that the author actively writes, and one for the retweets.
+In this process, all the tweets with attachments and not in English are discarded. The tweets are divided into multiple dataframes: one for original tweets - i.e., the ones that the author actively writes-, and one for the retweets.
 
-At the end of this stage, a CSV and pkl file are saved in case somebody needs the tweets in tabular data.  If you re-run the script and these files exist, they will be loaded instead of  running again processing.
+At the end of this stage, a CSV and pkl file are saved in case somebody needs the tweets in tabular data. If the script is re-run and these files exist, they will be loaded instead of running the process again.
+
 
 \subsection{Topic modeling}
 
-As we extensively discussed in chapter \ref{Ch:related} in this segment of the pipeline, the tweets can be labeled using Bertopic, with the possibility to choose the embedder; the one used in this research is \textit{all-MiniLM-L6-v2}, the one evaluated in the previous section.
+As extensively discussed in chapter 2, in this segment of the pipeline the tweets can be labeled using Bertopic, with the possibility to choose the embedder; the one used in this research is\textit{ all-MiniLM-L6-v2}, the one evaluated in the previous section.
 
-This step is the most computationally expensive; for this reason, to avoid redundancy, the topic modeling has been run only using original tweets. 
+This step is the most computationally expensive; for this reason, to avoid redundancy, the topic modeling has been run only using original tweets.
+
 
 After this step, all the original tweets are labeled with a numeric topic, and then the label has been propagated to all the retweets so that the entire dataset is now labeled with a topic.
 
-At this point, it is possible to use the OpenAI API to give a meaningful label to the topics; before this, it was just the most relatively frequent words of the topic. Using the langchain library, we can structure a prompt to be used.  We gave to the model the words identified with TF-IDF and 3 representative tweets sampling a subset of the documents in each topic and calculating  based on the cosine similarity between TF-IDF representations.
+At this point, the OpenAI API can be used to give a meaningful label to the topics, while beforehand, the labels were just made of the most relatively frequent words of the topic. By using the langchain library, it is possible to structure an employable  prompt. The model was assigned the words identified with TF-IDF and 3 representative tweets sampling a subset of the documents in each topic, and calculated on the cosine similarity between TF-IDF representations.
+
 
 This is the one used: 
 \\
@@ -63,20 +66,20 @@ Similarly to the previous stage, the labeled dataset is saved in the cache folde
 
 
 \subsection{Network}
-In this phase, after labeling the tweets, we will create a retweet network for each topic, putting all together in a multilayer network.
+In this phase, after labeling the tweets, a retweet network will be created for each topic, gathering it all together in a multilayer network.
 %The network is directed, the nodes are the users, and the tie is the number of retweets. For each topic, a network is created.
 
-In the process of the creation of the network, there are retweeted tweets that do not have the original one, so we discard them.
+In the process of the creation of the network, there are retweeted tweets that do not have the original one, so they are  discarded.
 
-The last step is the creation of a multilayer network using the multinet library developed by Uppsala University.  Every layer is a retweet network of a specific topic. It has been built starting from the subset of tweets of a specific topic, the unique users are the nodes and if user A retweets user B there will be a tie $A \rightarrow B$. The network is directed and weighted with the number of retweet. Fig \ref{fig:multilayer} is a simple example of a network with 2 layers.
+The last step is the creation of a multilayer network using the multinet library developed by Uppsala University; Every layer is a retweet network of a specific topic. It was built starting from the subset of tweets of a specific topic, the unique users are the nodes and, if user A retweets user B there will be a tie $A \rightarrow B$. The network is directed and weighted with the number of retweets. Fig \ref{fig:multilayer} is a simple example of a network with 2 layers.
 
-The networks then has been filtered removing the outlier layer, labeled with -1.
+The network then has been filtered by removing the outlier layer, labeled with -1.
 
 \paragraph{COP26 network}
-For cop 26 we detected 70 layers,  average number of user per layer is 8127, min is 15, max is 108829, what else?
+For COP26, 70 layers were detected, the average number of users per layer is 8127, min is 15, max is 108829,
 
 \paragraph{COP21 Network}
-like cop 26
+For COP26, 36 layers were detected, the average number of users per layer is 10123, min is 696, max is 142062,
 
 
 
@@ -91,22 +94,20 @@ like cop 26
 
 
 \section{Polarization}
-At this point, for each layer, we can compute for each user a latent ideology score, and then, using Hartigan's diptest, we can assign to each topic a polarization value. More details on how this is computed are in the related works.
-In this process, there are some parameters we can adjust: the number of influencers, which are defined as the most retweeted users, and $n$, which represents the minimum number of retweets a user should have done to an influencer to be considered.
+At this point, for each layer, it is possible to compute for each user a latent ideology score, and then, using Hartigan’s diptest, a polarization value  can be assigned to each topic. More details on how this is computed are dealt with in the related works. In this process, there are some parameters that can be adjusted: the number of influencers - defined as the most retweeted users-, and $n$ - representing the minimum number of retweets a user should have made to an influencer to be considered-.
 
-The ideology score is not computed on all the users, but when selecting the influencers, we are delimiting the users to the ones that retweeted at least n times those influencers. 
+The ideology score is not computed on all the users, but when selecting the influencers, the users are limited to the ones that retweeted at least n times those influencers.
 
-In order to have enought data to analyze we set $n\_influencers = 100$ and $n=2$ . The hartigan diptest requires a minimum of nodes to be statistically significant, at this point the layer are filtered, all the layers with a p-value of the diptest higher than  0.05 have been discarded. 
+In order to have enough data to be analyzed, the values set were $n\_influencers = 100$ and $n=2$. The hartigan diptest requires a minimum of nodes to be statistically significant and, since at this point the layer are filtered, all the layers with a p-value of the diptest higher than 0.05 have been discarded.
+
 
 \paragraph{COP26 }
-COP26 we pass from 70 to 30 networks
-The total influencers considered  in cop 26 in the analysis is 1698 and 22302 users have a score assigned for cop26, with an average of 1311 actors per topic, with a min of 151 and a max of 7764.  
+The number of networks goes from 70 to 30 . The total influencers considered in the analysis of COP26 is 1698. 22302 users have an assigned score for cop26, with an average of 1311 actors per topic, with a min of 151 and a max of 7764.
 
-\paragraph{COP21 to fix}
-COP21we pass from 70 to 26 networks
-The total influencers considered  in cop 26 in the analysis is 1557 and 22161 users have a score assigned for cop26, with an average of 1311 actors per topic, with a min of 151 and a max of 7764.  
+\paragraph{COP21}
+the number of networks went from 36 to 8. The total number of influencers considered in the analysis of COP21 is 392. 8020 users have an assigned score, with an average of 2058 actors per topic, with a min of 35 and a max of 7524. 
 
-Tab     \ref{tab:recap_ideology} presents a summary of the starting networks 
+Tab  \ref{tab:recap_ideology} presents a summary of the starting networks 
 
 
 \begin{table}[h]
@@ -114,13 +115,14 @@ Tab     \ref{tab:recap_ideology} presents a summary of the starting networks
     \begin{tabular}{|l|l|l|l|}
         \hline
         \textbf{Description} & \textbf{COP21} & \textbf{COP26} & \textbf{COP2x}\\ \hline
-        Initial topics & 36 & 70 & 1 \\ \hline
-        Final topics & 4 & 26 & 1\\ \hline
-        Influencers scored & 270 & 1557 & 1\\ \hline
-        Users scored & 7931 & 22161& 1 \\ \hline
-        Mean users/topic &  2058 & 1311 & 1\\ \hline
-        Min users/topic & 35 & 151 & 1\\ \hline
-        Max users/topic & 7524 & 7764 & 1\\ \hline
+        Initial topics & 36 & 70 & 54 \\ \hline
+        Final topics & 8 & 26 & 29\\ \hline
+        Influencers scored & 392 & 1557 & 1559\\ \hline
+        Users scored & 8020 & 22161& 33312 \\ \hline
+        Mean users/topic &  2058 & 1311 & 1766\\ \hline
+        Min users/topic & 35 & 151 & 123\\ \hline
+        Max users/topic & 7524 & 7764 & 14504\\ \hline
+        diptest &1 & 0.07 & 0.05 \\ \hline
         \end{tabular}
         \caption{Summary of Latent ideology}
     \label{tab:recap_ideology}
@@ -128,7 +130,7 @@ Tab     \ref{tab:recap_ideology} presents a summary of the starting networks
 
 
 \section{Logitudinal analysis}
-In order to see topic polarization over time, we need to run the topic modeling with all the tweets. Still, there are too many, so instead of taking the original tweets of cop 21 and cop26, we only take the original with at least one retweet which are around 1/3 of the total but are the one needed to create  the rest of the network.
+In order to see topic polarization over time, we need to run the topic modeling with all the tweets. Still, there are too many, so instead of taking the original tweets of COP21 and COP26, we only take the original with at least one retweet which are around 1/3 of the total but are the one needed to create  the rest of the network.
 
 Then the two dataset have been merged, we will refer to this dataset $COP2x$ and the same process described below has been done.
 

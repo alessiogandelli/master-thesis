@@ -5,11 +5,11 @@
 
 \chapter{Data Description}%
 \label{ch:data}
-In this chapter, we will see an overview of the starting data used in this research, as well as some general statistics about it.
+The content of this chapter will be an overview of the starting data used in this research, as well as some general statistics about it.
 
 \section{Source of the data}
-The data are tweets collected from the Twitter API containing the hashtag \#cop21 \#cop26. 
-For each cop, we have two jsonlines files, one for the tweets and one for the users involved. The fields are the ones stated in the documentation \footnote{ \href{https://developer.twitter.com/en/docs/twitter-api/data-dictionary/object-model/tweet}{https://developer.twitter.com/en/docs/twitter-api/data-dictionary/object-model/tweet}}, there are many but the relevant ones to us are the following: 
+The data considered are tweets collected from the Twitter API containing the hashtags \#cop21 and \#cop26. 
+For each cop,  there are two jsonlines files, one for the tweets and one for the users involved. The fields are the ones stated in the documentation \href{https://docs.google.com/document/d/1C6DjDXXu-fHtpighvW524e6uD2eFxLOq/edit?pli=1\#heading=h.1pxezwc}{\textsuperscript{1}}; among the numerous fields, the most relevant for this work  are the following:
 
 \begin{table}[H]
 \centering
@@ -31,27 +31,25 @@ mentions\_id & The IDs of the mentioned users in the tweet \\ \hline
 \caption{Description of the fields used of the tweets data}
 \label{tab:my_label}
 \end{table}
-While we use the user's file to map the ID of the users to their username, even though we do not always have this information, in that case, we use the user ID as the username.
+ The user’s file is used to map the ID of the users to their username, but when this information is not available, the user ID is treated as the username.
 
 \section{ Data Statistics}
-We have data from 2 cops: COP21, COP26.
-All the tweets are in English and without links or image/video content.
-We call an original tweet a tweet written by a user, so that's not a retweet. Fig \ref{fig:tweets_by_date} shows the distribution of the tweets over time for both cops; most of the tweets have been tweeted while the conferences were taking place.
+The data considered originates from 2 COPs: COP21, COP26. All the tweets are in English and without links or image/video content. For this work,  an ‘original tweet’ is a tweet written by a user, meaning that it is  not a retweet. Fig \ref{fig:tweets_by_date} shows the distribution of the tweets over time for both cops; most of the tweets have been tweeted while the conferences were taking place.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\linewidth ]{Chapter3/figures/tweets_by_date_cop21.png}
 
     \includegraphics[width=0.75\linewidth ]{Chapter3/figures/tweets_by_date_cop26.png}
-    \caption{Numebr of tweets by date for cop 21 and cop26}
+    \caption{Numeber of tweets by date for cop 21 and cop26}
     \label{fig:tweets_by_date}
 \end{figure}
 
 \paragraph{COP21}
-The tweets span from January 2015 to June 2016, but 77\%  of the tweets are from November and December 2021; cop26 was held between 30th November and 12th December. In the dataset, 975040 tweets have been tweeted by 234389 users, of which only {} tweeted an original tweet with at least one retweet; every user tweeted on average 4.16 tweets; the maximum amount of tweets a user tweeted is 9635, 89\% of users tweeted less than five tweets.
+The tweets span from January 2015 to June 2016, but 77\% of the tweets are from November and December 2021; cop26 was held between November 30th and December 12th. In the dataset, 975040 tweets were tweeted by 234389 users, of which only x tweeted an original tweet with at least one retweet; every user tweeted on average 4.16 tweets; the maximum amount of tweets a user tweeted is 9635, while 89\% of users tweeted less than five tweets.
 
 \paragraph{COP26}
-The tweets span from January 2021 to July 2022, but 81\%  of the tweets are from October and November 2021; cop26 was held between 31st October and 12th November. In the dataset, 1558968 tweets have been tweeted by 456000 users, of which only 30195 tweeted an original tweet with at least one retweet, every user tweeted on average 3.42 tweets, the maximum amount of tweet a user tweeted is 14267, 90\% of users tweeted less than two tweets.
+The tweets span from January 2021 to July 2022, but 81\%  of the tweets are from October and November 2021; COP26 was held between  October 31st and  November 12th. In the dataset, 1558968 tweets were tweeted by 456000 users, of which only 30195 tweeted an original tweet with at least one retweet. Every user tweeted on average 3.42 tweets, the maximum number of tweets a user tweeted is 14267, while 90\% of users tweeted less than two tweets.
 \\
 
 
@@ -62,7 +60,7 @@ Fig \ref{fig:tweets_by_users} shows how most users tweeted just a few tweets (no
     \includegraphics[width=0.75\linewidth ]{Chapter3/figures/tweets_by_users_cop21.png}
 
     \includegraphics[width=0.75\linewidth ]{Chapter3/figures/tweets_by_users_cop26.png}
-    \caption{Numebr of tweets by user for cop 21 and cop26}
+    \caption{Number of tweets by user for cop 21 and cop26}
     \label{fig:tweets_by_users}
 \end{figure}
 
@@ -94,7 +92,7 @@ Fig \ref{fig:tweets_by_users} shows how most users tweeted just a few tweets (no
 
 
 
-In fig \ref{fig:cop26_tweets_stats} we can see how the 1'558'968 are distributed, in fact 76\% of them are retweets generated by only 130k original tweets. It is also worth noting that almost 2/3 of the original tweets have 0 retweets.
+Fig \ref{fig:cop26_tweets_stats} depicts how the 1'558'968 are distributed: 76\% of them are retweets generated by only 130k original tweets. It is also worth noting that almost 2/3 of the original tweets have 0 retweets.
 
 \begin{figure}
     \centering

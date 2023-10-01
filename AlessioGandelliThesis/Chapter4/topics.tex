@@ -2,38 +2,34 @@
 
     \graphicspath{{Chapter4/Figures}{Chapter4/Figures}}
 
-This section presents the evaluation of different models used for tweet labeling. Both unsupervised and supervised approaches were used to evaluate the performance of the models. 
-The evaluation aimed to find the best-performing model to label tweets accurately. 
-The models included traditional methods (LDA, GSDMM, and NMF) and neural models like  BERTopic. 
+This section presents the evaluation of different models used for tweet labeling. Both unsupervised and supervised approaches were used to evaluate the performance of the models. The evaluation aimed at finding the best-performing model to label tweets accurately. The models included traditional methods (LDA, GSDMM, and NMF) and neural models like BERTopic.
 
-The unsupervised evaluation (\ref{sec:unsupervised} ) evaluated traditional metrics used in this context, such as coherence and diversity scores.  The  results showed that BERTopic performed better than traditional methods, especially when using all-MiniLM-L6-v2 (BERT) \footnote{\href{https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2}{huggingface.co/sentence-transformers/all-MiniLM-L6-v2}}
-, text-embedding-ada-002 (OpenAI) \footnote{\href{https://platform.openai.com/docs/models/embeddings}{platform.openai.com/docs/models/embeddings}}
-
+The unsupervised evaluation (\ref{sec:unsupervised}) assessed the traditional metrics used in this context, such as coherence and diversity scores. The results showed that BERTopic performed better than traditional methods, especially when using all-MiniLM-L6-v2 (BERT) \footnote{\href{https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2}{huggingface.co/sentence-transformers/all-MiniLM-L6-v2}}
+, text-embedding-ada-002 (OpenAI) \footnote{\href{https://platform.openai.com/docs/models/embeddings}{platform.openai.com/docs/models/embeddings}},
 and tweet\_classification \footnote{\href{https://huggingface.co/louisbetsch/tweetclassification-bf-model}{huggingface.co/louisbetsch/tweetclassification-bf-model}} embeddings. 
 
 
-The supervised evaluation consisted of building a custom-labeled dataset from scratch and then looking at the accuracy of the models. The results showed that BERT and OpenAI were the best-performing models. The section concludes with a summary of the results and a description of the representation used for labeling the tweets.
+The supervised evaluation consisted in building a custom-labeled dataset from scratch, and then in looking at the accuracy of the models. The results showed that BERT and OpenAI were the best-performing models. The section culminates with a summary of the results and a description of the representation used for labeling the tweets.
 
-The models used are both traditional(LDA, GSDMM, NMF) as a reference of the ground truth and neural because they seem to be the most accurate; in particular, we will evaluate BERTopic with several embedding methods. We choose BERtopic over Top2Vec because they are very similar and also because the Python library is more comprehensive and allows us to be more flexible.
+The models used are both traditional (LDA, GSDMM, NMF), as a reference of the ground truth, and neural, because they seem to be the most accurate; in particular, BERTopic will be evaluated with several embedding methods.  BERtopic was chosen over Top2Vec both because they are very similar, and because the Python library is more comprehensive and allows for more flexibility.
 
-Evaluating a topic modeling algorithm is challenging due to the lack of objectivity in identifying a topic. In this work, we evaluated the models in two ways: first, using a widely used unsupervised approach: metrics like coherence and diversity. 
-Then, to validate the results, we also did a supervised evaluation using different datasets built ad hoc for this setting.
+Evaluating a topic modeling algorithm is challenging due to the lack of objectivity in identifying a topic. In this work, the models were evaluated in two ways: firstly, by employing a widely used unsupervised approach: metrics like coherence and diversity. Then, to validate the results, a supervised evaluation was also carried out by using different datasets built ad hoc for this setting.
 
 \subsection{Unsupervised}
 \label{sec:unsupervised}
-To compare the different models, we used a library suggested by the creator of BERtopic called OCTIS \cite{DBLP:conf/clic-it/TerragniF21} \cite{terragni2020octis}; this allowed us to structure an experiment to measure different metrics presented in chapter \ref{Ch:related}: coherence and diversity.
+To compare the different models, a library suggested by the creator of BERtopic called OCTIS \cite{DBLP:conf/clic-it/TerragniF21} \cite{terragni2020octis} was used; this allowed the creation of an experiment to measure the different metrics presented in chapter \ref{Ch:related}: coherence and diversity.
 
 
 
 
 \paragraph{Dataset}
-In this case, the dataset is composed of 1669 preprocessed tweets related to climate change with the hashtag \textit{\#cop22}; the preprocessing phase involved removing retweets, links, punctuation, and the most common hashtags (\#cop22, \#climatechange \#p2), all the tweets were in English.  We choose this dataset, which is not the one used in the final analysis because the domain is the same, and the goal analogous, since we have to detect subtopics of a main topic which is climate change. For this reason we can generalize the result to the tweets of the other cops.
+In this case, the dataset is composed of 1669 preprocessed tweets related to climate change with the hashtag \textit{\#cop22}, all in english; the preprocessing phase involved removing retweets, links, punctuation, and the most common hashtags (\#cop22, \#climatechange \#p2).  We choose this dataset, which is not the one used in the final analysis because the domain is the same, and the goal analogous, since we have to detect subtopics of a main topic which is climate change. For this reason we can generalize the result to the tweets of the other COPs.
 
 \paragraph{Methods}
 
 The models used in this evaluation were LDA, NMF, and BERTopic. In the BERtopic case, several embeddings have been tested (  all-MiniLM-L6-v2, text-embedding-ada-002, climatebert \cite{webersinke_climatebert_2022}, tweet\_classification, USE \cite{cer_use_2018}).
 
-Each model has been fitted several times, changing the parameters:
+Each model has been fitted several times changing the parameters:
 \begin{itemize}
     \item  \textbf{number of topics} from 10 to 50 with a step of 5 
     \item \textbf{min topic size}: 5 and 15  tweets\footnote{only for bertopic}
@@ -44,8 +40,7 @@ Each unique combination of parameters has been fit three different times; then, 
 
 \paragraph{Results}
 The results show that BERtopic performs way better in these tests than the traditional methods. In comparison, the best Bertopic embeddings are mini, OpenAi, and tweet classification.
-
-The experiment demonstrates how the \textit{min\_topic\_size} value of 5 is too small, so that the results will be taken considering a value of 15.
+The experiment demonstrates how the $min\_topic\_size$ value of 5 is too small, thus the results will be gathered considering a value of 15.
 
 Fig \ref{figure:unsupervised_results} shows the value of all the metrics with a different number of topics for the traditional methods and the best-performing neural one (OpenAI)
 
@@ -58,9 +53,9 @@ Fig \ref{figure:unsupervised_results} shows the value of all the metrics with a 
 \end{figure}
 
 
-However, Hoyle et al. \cite{hoyle_is_2021} showed how these metrics are not very meaningful for evaluating these models due to the lack of validation for neural models, and we should take these results with a grain of salt.
+However, Hoyle et al. \cite{hoyle_is_2021} explained how these metrics are not very meaningful for the evaluation of these models due to the lack of validation for neural models, therefore  these results should be taken with a grain of salt.
 
-From this evaluation, we can conclude that BERTopic's topic size is better than smaller, especially if we have many documents. Topics of Bertopic are way more diverse than LDA and NMF, and within the topics, the most relevant words are more semantically related.
+From this evaluation, it can be concluded that BERTopic’s topic size is better bigger than smaller, especially if many documents are available. Topics of Bertopic are way more diverse than the ones of LDA and NMF and, within the topics, the most relevant words are more semantically related.
 
 
 \begin{table}[]
@@ -82,13 +77,12 @@ From this evaluation, we can conclude that BERTopic's topic size is better than 
 
 
 \subsection{Supervised}
-Considering the result of the unsupervised evaluation, we should use another method to validate what we found. In this case, we created two ad-hoc datasets to see how the models perform in a real-case scenario.
-
+Considering the result of the unsupervised evaluation, another method should be used to validate what was found. In this case, two ad-hoc datasets were created to see how the models perform in a real-case scenario.
 \paragraph{Dataset}
 
-The first step for the supervised part was the data collection. In this case, we packed specific datasets to test our models. The datasets have been chosen based on the trending topic on Twitter in that days (March 2023)
+The first step for the supervised phase was the data collection. In this case,  specific datasets were packed to test the chosen models. The datasets were selected based on the trending topic on Twitter at the time (March 2023).
+The first dataset is simpler and contains very different topics, it follows that it should be effortless enough to cluster the documents. In contrast, the second dataset is trickier because it includes only politics-related tweets, including some which overlap with more hashtags related to US politics.
 
-The first is simpler and contains very different topics, so it should be easy to cluster the documents. In contrast, the second is trickier because it includes only politics-related tweets, including some overlapping with more hashtags related to US politics.
 
 \begin{itemize}
     \item \textbf{simple}: 1093 labeled tweets of 5 different topics identified by a hashtag \footnote{\#Bitcoin, \#stormydaniels, \#UkraineRussianWar, \#SaudiArabianGP, \#climatechange}
@@ -96,35 +90,36 @@ The first is simpler and contains very different topics, so it should be easy to
 \end{itemize}
 
 
-For both datasets, we used two different versions: with and without hashtags. The reason for this is to avoid the model to cluster based on the hashtags.
+For both datasets, we used two different versions: with and without hashtags. The reason beheind this was to avoid the risk of the model to cluster based on the hashtags.
 
-The tweets have been extracted using \href{https://twarc-project.readthedocs.io/en/latest/twarc2_en_us/}{twarc2}, getting only English tweets and without retweets. We used the trending topic at that time (March 2023)  because twitter API did not let you access data before 48h, so we decided to stream the most popular hashtags.
+The tweets have been extracted using \href{https://twarc-project.readthedocs.io/en/latest/twarc2_en_us/}{twarc2}, getting only English tweets and excluding retweets. Only the trending topic at that time (March 2023) was used because Twitter API did not allow access to data before 48h.
 
 \paragraph{Metrics}
-In order to evaluate the topics, we had to define some  accuracy metrics which is not a straightforward task, because using BERTopic, we do not set a number of topics apriori, so it has to figure it out by itself. 
-After running the model, we have both the known topic (the hashtag) and the inferred one (a number), and we can now create a confusion matrix between the two sets. 
-To map the inferred topic to the known one, we use the inferred topic with the highest value. This is not always true, but by combining this value with other metrics, we can detect the error.
+In order to evaluate the topics, it was necessary to define some accuracy metrics, which is not a straightforward task because, by using BERTopic, there is no set number of topics apriori, but it has to figure it out by itself.
+After running the model, both the known topic (the hashtag) and the inferred one (a number) are established, making it possible to create a confusion matrix between the two sets. To map the inferred topic to the known one, the inferred topic with the highest value was considered. In the case at hand, the error can be detected  by combining this value with another metric: min\_topic\_size.
 
 The metrics defined are the following:
 
 \begin{itemize}
-    \item \textbf{Accuracy}:  for each known topic, look at the biggest inferred topic of the same row of the confusion matrix and divide by the number of tweets in that topic, you can use fig \ref{figure:supervised heatmap1} as a reference.
-    \item \textbf{Accuracy no outliers}: in the Bertopic case, the label -1 refers to outliers. Compute the same as accuracy but not counting the outliers
-    \item \textbf{Min\_topic\_share}: same as accuracy but in the opposite direction, after having computed it for all of inferred topics, we take the minimum. This is helpful to detect when the accuracy is considered the wrong topic. This could happen when the inferred topic is less than the actual topic, so one inferred topic contains tweets from multiple topics, and then this number is low.
+    \item \textbf{Accuracy}: for each known topic, take the biggest inferred topic of the same row of the confusion matrix and divide by the number of tweets in that topic, fig \ref{figure:supervised heatmap1} can be taken as reference.
+    \item \textbf{Accuracy no outliers}: in the Bertopic case, the label -1 refers to outliers. Therefore, to achieve it, compute the same as for accuracy but without counting the outliers.
+    \item \textbf{Min\_topic\_share}: same as for accuracy but in the opposite direction, after having computed it for all of inferred topics, the minimum is considered. This is helpful to detect when the accuracy is considering the wrong topic, which could happen when the inferred topic size is less than the actual topic one (so one inferred topic contains tweets from multiple topics, and then this number is low)
 \end{itemize}
 
 
 \paragraph{Parameters}
 
-$max\_df$ is used to remove the terms that appear too frequently; a value of 0.95 means remove the terms that appeared in more than 95/% of documents 
-$min\_df$ is the opposite; in this case, being an integer, it refers to the minimum number of documents a term should be in to be considered 
-$alpha$ is a parameter that influences the number of clusters that will be created; low alpha results in many clusters with single words, while high alphas results in fewer clusters with more words.
-for these 3 we used the default settings.
+$max\_df$ is used to remove the terms that appear too frequently; a value of 0.95 means remove the terms that appeared in more than 95\% of documents, while 
+$min\_df$ is the opposite; in this case, with the value being an integer, the parameter refers to the minimum number of documents a term should be in to be considered.
+
+$Alpha$ is a parameter that influences the number of clusters that will be created; low alpha results in many clusters with single words, while high alphas results in fewer clusters with more words.
+For these 3 the default settings were used.
 
 
-$ngram\_range$ defines the number of consecutive words to be considered; for example, a value of (1,2) tells the method to consider single words and bigrams ( two consecutive words), including threegrams was too computationally expensive
+$ngram\_range$  defines the number of consecutive words to be considered: for example, a value of (1,2) tells the method to consider single words and bigrams (two consecutive words), but including threegrams was too computationally expensive.
 
-we decide to use a $min\_topic\_size$ of 50 because we took around 200 tweet for each hashtag, and considering that some of that will be classified as outliers, 50 was a safe trade-off to not risk that a topic is too small and the size, that from unsupervised we colcuded that bigger is better.
+ A $min\_topic\_size$ of 50 was made because 200 tweet for each hashtag were inspected and, considering that some of them will be classified as outliers, a size of 50 was a safe trade-off in order not to risk that a topic nor the size were too small since, from unsupervised evaluations, it was  concluded that the bigger the size, the better.
+
 \begin{verbatim}
 BERTopic: (nr_topics = 'auto', min_topic_size = 50)
 
@@ -135,7 +130,7 @@ GSDMM: (alpha = 0.1, min_df = 0.1, n_iters = 30)
 
 
 \paragraph{Simple Dataset Results}
-We started evaluating the \textit{simple} dataset with hashtags. As we can see in Fig \ref{figure:supervised bar} base ( all-MiniLM-L6-v2) and OpenAi obtained almost a perfect score for each topic. At the same time, climatebert seems to have a great accuracy but a low mean topic share, this is a signal that something is wrong and we should inspect the heatmap.
+ At first, the evaluation was on the simple dataset with hashtags. As Fig 4.2 shows, base ( all-MiniLM-L6-v2) and OpenAi obtained almost a perfect score for each topic. At the same time, climatebert seems to have a great accuracy but a low mean topic share, this is a signal that something is wrong and the heatmap should be inspected.
 
 \begin{figure}[h]
     \centering % figure is centered on the page
@@ -145,24 +140,23 @@ We started evaluating the \textit{simple} dataset with hashtags. As we can see i
     \label{figure:supervised bar} % assign a unique label to each figure
 \end{figure}
 
-In fact, we can clearly see in \ref{figure:sup_heatmap1_simple_hash} that even though the accuracy is very good, climatebert has some difficulties in dividing the topics, putting almost all the tweets in the same inferred topic. While the first two are performing very well as expected, it is not true for the others. We can see how climatebert put almost all the tweets in topic 0, being able only to find the formula1 tweets and not the climatechange one, as it is designed to do.
-That's the reason why we decided to remove the models that are not performing well in the simplest case, with the exception of NMF, to use it as ground truth. 
+In fact, it is clear from  \ref{figure:sup_heatmap1_simple_hash} that even though the accuracy is very good, climatebert has some difficulties in dividing the topics, putting almost all the tweets in the same inferred topic. While the first two are performing very well as expected, the same is not true for the others.  Climatebert puts almost all the tweets in topic 0, thus being able only to find the formula1 tweets and not the climatechange one, as it is designed to do. That’s the reason why the decision was to remove the models that were not performing well in the simplest case, with the exception of NMF to use as ground truth.
 
 
 \begin{figure}[h]
     \centering % figure is centered on the page
-        \includegraphics[width=0.99\linewidth]{Chapter4/figures/topic_heatmap1.png} 
+        \includegraphics[width=0.99\linewidth]{Chapter4/figures/heatmaps_eval.jpeg} 
     \caption{Heatmap comparison of the different model with the simple dataset with hashtags
     }
     \label{figure:sup_heatmap1_simple_hash} % assign a unique label to each figure
 \end{figure}
 
-Fig \ref{figure:supervised heatmap1} shows how BERT and OpenAI performed in the simple dataset but without the hashtags, in particular, how BERT tends to find more outliers than OpenAI. Overall, both get a good performance.
+Fig \ref{figure:supervised heatmap1} shows how BERT and OpenAI performed in the simple dataset but without the hashtags and, in particular, how BERT tends to find more outliers than OpenAI. Overall, both get a good performance.
 
 
 \begin{figure}[h]
     \centering % figure is centered on the page
-        \includegraphics[width=0.99\linewidth]{Chapter4/figures/topic_heatmap_bertopic.png} 
+        \includegraphics[width=0.99\linewidth]{Chapter4/figures/bert_vs_openai_heatmap.png} 
     \caption{Heatmap comparison of mini and OpenAi of the simple dataset without hashtags}
     \label{figure:supervised heatmap1} % assign a unique label to each figure
 \end{figure}
@@ -171,7 +165,7 @@ An interesting feature of Bertopic is the ability to visualize the different top
 
 \begin{figure}
     \centering
-    \includegraphics[width=1\linewidth]{Chapter4/figures/openai_documents_viz.png}
+    \includegraphics[width=1\linewidth]{Chapter4/figures/openai_doc_viz.png}
     \caption{docs representation of simple dataset for openai}
     \label{fig:openai docs}
 \end{figure}
@@ -181,20 +175,20 @@ An interesting feature of Bertopic is the ability to visualize the different top
 
 The politics dataset is clearly more difficult to evaluate, but with the hashtags, it is still doing a good job. Fig \ref{fig:openai_heat_docs_politics_hash} \ref{fig:bert politics with hashtags} shows heatmap and topic distribution for the politics dataset with hashtags.
 
- Both BERT and OpenAi are creating two topics from the Taiwan case. OpenAi merges two topics, which makes sense since the two hashtags related to Trump are related to the same event( \#IndictArrestAndConvictTrump and \#stormydaniels) 
+ Both BERT and OpenAi are creating two topics from the Taiwan case. OpenAi merges two topics, which is coherent with the fact that the two hashtags related to Trump are also related to the same event( \#IndictArrestAndConvictTrump and \#stormydaniels). 
 
 \begin{figure}
     \centering
-    \includegraphics[width=1\linewidth]{Chapter4/figures/openai_politics_hash_comparison.png}
+    \includegraphics[width=1\linewidth]{Chapter4/figures/heatmaps_documents_openai.png}
     \caption{Heatmap and documents representation of the politics dataset with hashtags evaluated with openai}
     \label{fig:openai_heat_docs_politics_hash}
 \end{figure}
 
-To validate the results, we ran the algorithm 100 times, and most of the time, for BERT, the min topic share is 0.9, which means they got the correct number of topics and classified them in a good way.
+To validate the results, the algorithm was run 100 times and, most of the time, for BERT the min topic share was 0.9, which means it got the correct number of topics and classified them in a good way.
 
 \begin{figure}
     \centering
-    \includegraphics[width=1\linewidth]{Chapter4/figures/bert_politics_hash_comparison.png}
+    \includegraphics[width=1\linewidth]{Chapter4/figures/heatmaps_docs_bert.png}
     \caption{bert heatmap and document viz politics with hashtags}
     \label{fig:bert politics with hashtags}
 \end{figure}
@@ -203,14 +197,14 @@ In the case without hashtags, OpenAi and BERT put in a single cluster all the tw
 
 
 \paragraph{Topic representation}
-The last step is giving a meaningful label to the clusters created; in this manner, we can see if the openai API works well; in particular, we used the model named \textit{gpt-3.5-turbo}. It worked surprisingly well; table \ref{tab:supervised_labels} contains the label generated for both simple and political datasets.
+The last step is giving a meaningful label to the clusters created, so that it can be seen if the openai API works well; in particular, the model named \textit{gpt-3.5-turbo} was used, which worked surprisingly well; table \ref{tab:supervised_labels} contains the label generated for both simple and political datasets.
 
-You can use Fig\ref{fig:openai_heat_docs_politics_hash} as a reference. Note the discussion under the \#taiwan hashtag is divided into two different topics as present in the document representation.
+Fig \ref{fig:openai_heat_docs_politics_hash} as reference. Note that the discussion under the \#taiwan hashtag is divided into two different topics, as depicted in the document representation.
 
 The prompt used is: \textit{you are a tweet labeler, you are given representative words from a topic and three representative tweets, give more weight to the words, given all this information give a short label for the topic (max 10 words), starts all with topic:}
 
 
-\begin{table}[H]
+\begin{table}
 \begin{tabular}{ll}
 \hline
 \textbf{simple dataset}            & \textbf{label}                                             \\ \hline
@@ -234,7 +228,7 @@ The prompt used is: \textit{you are a tweet labeler, you are given representativ
 \end{table}
 
 \paragraph{Conclusion}
-Tab \ref{tab:unsupervised_recap} shows the result of unsupervised evaluation, while Tab \ref{tab:supervised recap } shows the supervised. With the supervised evaluation, we showed how the results of the unsupervised one were not completely true; this helped to discard some models and confirm the hypothesis that the neural model with Bert Embedder and Openai was the best performing. There is still a significant difference between the two; Bert is open source and can be run locally, while Openai is not free and can only be used through API.
+Tab \ref{tab:unsupervised_recap} shows the result of unsupervised evaluation, while Tab \ref{tab:supervised recap } shows the supervised. Through the supervised evaluation, it is demonstrated  how the results of the unsupervised one were not completely true; this helped to discard some models and confirm the hypothesis that the neural model with Bert Embedder and Openai was the best performing model. There is still a significant difference between the two: Bert is open source and can be run locally, while Openai is not free and can only be used through API.
 
 
 

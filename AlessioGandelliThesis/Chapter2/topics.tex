@@ -11,13 +11,13 @@ Another classical algorithm based on linear algebra is NMF (Non-negative Matrix 
 \subsection{Advanced methods}
 Here, the most recent techniques that have been used and tested in different settings will be inspected:
 
-BTM (Biterm Topic modeling, 2013) \cite{yan_biterm_2013}, unlike the traditional methods, does not use the bag of words approach, but it considers the co-occurrence of words to the topic modeling. As s generative probabilistic model, similar to LDA, represents each document as a set of pairs of words (biterms).
+BTM (Biterm Topic modeling, 2013) \cite{yan_biterm_2013}, unlike the traditional methods, does not use the bag of words approach, but it considers the co-occurrence of words to the topic modeling. As a generative probabilistic model, similar to LDA, represents each document as a set of pairs of words (biterms).
 
 GSDMM (Gibbs Sampling algorithm for the Dirichlet Multinomial Mixture model, 2014) \cite{yin_dirichlet_2014} is a clustering-based algorithm that uses Gibbs sampling to iteratively assign each document to a topic. It models the distribution of words in each topic using a Dirichlet distribution. GSDMM is designed explicitly for short text from social media, which is typically unstructured and contains slang.
 
 \subsection{Neural approach}
 
-The most advanced techniques (BERTopic \cite{grootendorst_bertopic_2022}and Top2Vec \cite{angelov_top2vec_2020})  exploit neural networks, in particular transformers \cite{vaswani_attention_2017}, and have a common structure: 
+The most advanced techniques (BERTopic \cite{grootendorst_bertopic_2022} and Top2Vec \cite{angelov_top2vec_2020})  exploit neural networks, in particular transformers \cite{vaswani_attention_2017}, and have a common structure: 
 
 \begin{enumerate}
     \item Vectorization of the document using embeddings
@@ -30,7 +30,7 @@ Let us see in detail all these steps:
 
 \subsubsection{Embeddings}
 
-The first and most crucial step is mapping each document into a vector of numbers  easily manipulated by the machine. This can be accomplished in a wide range of  ways: from naive one-hot encoding (Recurrent Neural Networks (RNN), Long Short-Term Memory Networks), to more complex transformers. Egger et al. \cite{egger_topic_2022} proved that the latter, in particular Bertopic is the best-performing method.
+The first and most crucial step is mapping each document into a vector of numbers  easily manipulated by the machine. This can be accomplished in a wide range of  ways: from naive one-hot encoding (Recurrent Neural Networks (RNN), Long Short-Term Memory Networks), to more complex transformers. Egger et al. \cite{egger_topic_2022} proved that the latter, in particular Bertopic is the best-performing method when using tweets as documents.
 
 A transformer \cite{vaswani_attention_2017}  is a deep learning architecture that excels at processing sequential data, such as natural language text. Unlike previous architectures like recurrent neural networks (RNNs) and long short-term memory (LSTM) models, transformers can process all parts of the input data in parallel, which allows for faster training and execution.
 
@@ -50,7 +50,7 @@ For this purpose,  many algorithms  that can reduce the length of the vectors ex
 Some examples are:
 Principal Component Analysis \cite{mackiewicz_principal_1993}(PCA), which works maximizing the variance of the data along the principal components, 
 t-SNE \cite{JMLR:v9:vandermaaten08a}focuses instead on preserving the local structure of the data in the lower-dimensional space. However, t-SNE is not recommended for clustering or outlier detection as it does not necessarily preserve distances or densities well, 
-UMAP \cite{McInnes2018}, which is particularly known for its scalability, ability to preserve global structure, and computational efficiency compared to other dimensionality reduction methods, is suited to reduce the dimensionality of big datasets like the one used in this research.
+UMAP \cite{McInnes2018}, which is particularly known for its scalability, and its ability to preserve global structure, is more computational efficent compared to other dimensionality reduction methods, is suited to reduce the dimensionality of big datasets like the one used in this research.
 
 \subsubsection{Clustering}
 Clustering is an unsupervised machine-learning technique that aims at grouping similar objects together based on their features. The goal of clustering is to partition the data points into subsets, called clusters, such that objects within the same cluster are related to each other in a certain way. There are plenty of clustering algorithms: hierarchical, density-based, distribution-based, and centroid based.
@@ -79,7 +79,7 @@ TF-IDF is the product of these 2.
 
 
 
-Top2Vec, instead of each cluster,  identifies the centroid first, typically calculated as the mean value of every dimension of all the points in the cluster. Then, it gets the n closest words to the centroid.
+Top2Vec, instead,  for each cluster,  identifies the centroid first, typically calculated as the mean value of every dimension of all the points in the cluster. Then, it gets the n closest words to the centroid.
 
 
 \subsubsection{Topic Representation}
@@ -98,7 +98,7 @@ The coherence and diversity metrics are  measures used in topic modeling to eval
 
 \begin{itemize}
     \item \textbf{NPMI (Normalized Pointwise Mutual Information)} The NPMI value lies between -1 and 1, where a higher value indicates a higher level of coherence, thus implying better topics. It is calculated as follows: 
-    For every pair of unique words, $(\text{{word1}}, \text{{word2}})$, in a given topic, the Pointwise Mutual Information (PMI) is calculated as:
+    for every pair of unique words, $(\text{{word1}}, \text{{word2}})$, in a given topic, the Pointwise Mutual Information (PMI) is calculated as:
     \begin{equation} 
     \text{{PMI}}(\text{{word1}}, \text{{word2}}) = \log\left(\frac{P(\text{{word1}}, \text{{word2}})}{P(\text{{word1}}) \cdot P(\text{{word2}})} \right)
     \end{equation}
@@ -131,5 +131,5 @@ The coherence and diversity metrics are  measures used in topic modeling to eval
     \end{equation}
 
 
-    \item \textbf{Computation time}: time needed to fit the models
+    \item \textbf{Computation time}: time needed to fit the models.
 \end{itemize}

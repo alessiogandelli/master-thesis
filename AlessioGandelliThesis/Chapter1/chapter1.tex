@@ -12,7 +12,7 @@
     \graphicspath{{Chapter1/Figs/Vector/}{Chapter1/Figs/}}
 \fi
 \section{Background}
-Climate change has been a well-known problem among scientists for a long time. The first paper warning about the effects of the increment of carbon dioxide in the atmosphere is from 1976 \cite{manabe_thermal_1967}, while in a study of 1976 \cite{keeling_atmospheric_1976} tit was observed for the first time. In 1988, the World Meteorological Organization Established the Intergovernmental Panel On Climate Change (IPCC) \cite{baker_1989}, which is the leading organization evaluating climate change up to date as. As shown in \cite{santos_climate_2021}, the researchers' interest in climate change grew significantly after 1990. 
+Climate change has been a well-known problem among scientists for a long time. The first paper warning about the effects of the increment of carbon dioxide in the atmosphere is from 1976 \cite{manabe_thermal_1967}, while in a study of 1976 \cite{keeling_atmospheric_1976} it was observed for the first time. In 1988, the World Meteorological Organization Established the Intergovernmental Panel On Climate Change (IPCC) \cite{baker_1989}, which is the leading organization evaluating climate change up to date. As shown in \cite{santos_climate_2021}, the researchers' interest in climate change grew significantly after 1990. 
 
 \begin{figure}[H]
     \centering
@@ -21,7 +21,7 @@ Climate change has been a well-known problem among scientists for a long time. T
     \label{fig:enter-label}
 \end{figure}
 
-The issue has become mainstream only in the past few years since, partially due to Greta Thunberg \cite{sabherwal_greta_2021} and Fridays for Future, people grew more aware of the problem. As we can see in Fig \ref{fig:google_greta}, only after 2019 people started searching for , and talk about, a 'climate crisis' \footnote{we choose this term because it is not descriptive as climate change but focus on the negative version of it}, underlining the urgency with which we should act. It is also true that the strikes caused inconvenience to many ordinary citizens trying to reach their workplaces. As a consequence someone may have developed some hostility toward this activism and, thus, toward climate change. In fact, an increase in polarization has been detected after the strikes \cite{Falkenberg_climate_2022}.
+The issue has become mainstream only in the past few years since, partially due to Greta Thunberg \cite{sabherwal_greta_2021} and Fridays for Future, people grew more aware of the problem. As we can see in Fig \ref{fig:google_greta}, only after 2019 people started searching for, and talk about, a 'climate crisis' \footnote{we choose this term because it is not descriptive as climate change but focus on the negative version of it}, underlining the urgency with which we should act. It is also true that the strikes caused inconvenience to many ordinary citizens trying to reach their workplaces. As a consequence someone may have developed some hostility toward this activism and, thus, toward climate change. In fact, an increase in polarization has been detected after the strikes \cite{Falkenberg_climate_2022}.
 \\
 
 \begin{figure}
@@ -56,25 +56,24 @@ The focus of this work will be on COP26 which is the one that occurred in a cont
 
 This work lays its foundations on the research of Falkenberg et al. \cite{falkenberg_growing_2022}, who discovered that COP26 was way more polarized than COP21. Using a similar approach, the ideological polarization will be explored topic by topic using cutting edge technologies such as transformers and by exploiting the complexity of multilayer networks. 
 
-There is not a universally agreed definition of polarization. Ref \cite{madgalena_polarization} help disambiguate the various definitions that fall under the term polarization. It distinguish between sociopolitical , group and individual polarization. Our focus will be on the sociopolitical one which concern the polarization of the influential individuals within the parties,  called elite polarization, which is defined  as the alignment of the political leader with all the positions of its own party. There is a general agreement between social and political scientist that elites are polarized, while it is unclear  if the masses are also polarized in the same way, since the results can depend on the methodology.
+There is not a universally agreed definition of polarization. Ref \cite{madgalena_polarization} help disambiguate the various definitions that fall under the term polarization. It distinguish between sociopolitical, group and individual polarization. Our focus will be on the sociopolitical one which concern the polarization of the influential individuals within the parties,  called elite polarization, which is defined  as the alignment of the political leader with all the positions of its own party. There is a general agreement between social and political scientist that elites are polarized, while it is unclear  if the masses are also polarized in the same way, since the results can depend on the methodology.
 
 
 
-In this paper, we will operationalize it using \cite{bramson_understanding_2017}, the same used by Falkenberg, which is: "The most common measure of polarization in the political literature is probably bimodality, which is the idea that the population can be usefully broken down into two subpopulations". 
+In this paper, we will operationalize it using what stated in \cite{bramson_understanding_2017}, the same used by Falkenberg, which is: "The most common measure of polarization in the political literature is probably bimodality, which is the idea that the population can be usefully broken down into two subpopulations". 
 In the case at hand, the two sub-populations are pro-climate and climate skeptics.
 
 
 
 \section{Research Questions}
-Due to the structure of this research, we can now answer a new set of questions related to intra-topic polarization. The first two look at the networks at a macro level focusing on the topology(?). The most straightforward is the first, RQ1, which aims at inspecting the topics that are driving the polarization of the entire COP26. Secondly, RQ2 wants to identify whether these topics have always been polarized compared to COP21.
+Due to the structure of this research, we can now answer a new set of questions related to intra-topic polarization. The first two look at the networks at a macro level focusing on the topology. The most straightforward is the first, RQ1, which aims at inspecting the topics that are driving the polarization of the entire COP26. Secondly, RQ2 wants to identify whether these topics have always been polarized compared to COP21.
 
-Then, we the focus will shift to a micro level 
+Then, we the focus will shift to a micro level with some questions related to the users, similarly to 
+\cite{garimella2017longterm} that  investigated the users retweet from both sides, but in addition we are interested also in the presence in multiple topics.
 
-LITERATURE INTRODUCING THIS
+In particular, RQ3 looks into whether  users are polarized in the same way over the different topics or if there are topics in which they are on the opposite side of the spectrum. RQ4 instead investigates whether the most active users, both in term of number of tweets and the presence on multiple topics, are more polarized than the others.
 
-some questions related to the users; in particular, RQ3 looks into whether  users are polarized in the same way over the different topics or if there are topics in which they are on the opposite side of the spectrum. RQ4 instead investigates whether the most active users, both in term of number of tweets and the presence on multiple topics, are more polarized than the others.
-
-
+Summarizing, the questions are:
 
 \begin{enumerate}
     \item  Which are the most polarizing topics discussed on Twitter during Cop 26?
@@ -86,10 +85,17 @@ some questions related to the users; in particular, RQ3 looks into whether  user
 \end{enumerate}
 
 \section{Structure}
-This thesis is structured to provide a comprehensive exploration of  topic modeling applied unstructured text organized in a multilayer network. It is organized into a series of chapters, each serving a distinct purpose in advancing the understanding of the subject matter.  Chapter \ref{Ch:related} touches the state of the art of all the matters used in this work, first exploring the most recent topic modeling techniques with the goal to select the best suited to our scenario; second, a comprehensive review of networks, in particular social networks and multilayer networks, and how polarization is computed.
+This thesis is structured to provide a comprehensive exploration of  topic modeling applied unstructured text organized in a multilayer network. It is divided into a series of chapters, each serving a distinct purpose in advancing the understanding of the subject matter. 
+
+Chapter \ref{Ch:related} touches the state of the art of all the matters used in this work, first exploring the most recent topic modeling techniques with the goal to select the best suited to our scenario; second, a comprehensive review of networks, in particular social networks and multilayer networks, and how polarization is computed.
+
 Chapter \ref{ch:data} presents the dataset along with some statistics about it.
-Chapter \ref{ch:methodology} is the core of this work, the first section covers the topic modeling evaulation, using two approaches, unsupervised and supervised, several models have been tested from traditional to the one based on neural networks. After identifying the best performing model, the network section shows the pipeline that allows to build a multilayer network based on the topics starting from the raw tweets. Finally for each layer it is computed a polarization score based on the latent ideology score given to the users.
-Chapter \ref{ch:res}  show the answer to the research question posed above.  Chapter \ref{ch:conclusion} wrap up everything and show some other research that can be done using the same methodology
+
+Chapter \ref{ch:methodology} is the core of this work, the first section covers the evaluation of several topic modeling techniques, using two approaches, unsupervised and supervised, several models have been tested from traditional to the ones based on neural networks. After identifying the best performing model, the network section shows the pipeline that allows to build a multilayer network based on the topics starting from the raw tweets. Finally for each layer it is computed a polarization score using the latent ideology score given to the users.
+
+Chapter \ref{ch:res}  show the answer to the research question posed above.  
+
+Chapter \ref{ch:conclusion} wrap up everything and show some other research that can be done using the same methodology.
 
 
 
